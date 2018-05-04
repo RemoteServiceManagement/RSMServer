@@ -1,0 +1,59 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package com.service.remote.grpc;
+
+service LogDeviceService {
+    rpc getDateRangeByDeviceExternalId(DeviceBasicQuery) returns (DateRange);
+    rpc getLogs(LogDeviceQuery) returns (stream LogBundle);
+    rpc getDevicePropertyNames(DeviceBasicQuery) returns (PropertyDefinitionBundle);
+}
+
+message DeviceBasicQuery {
+    string deviceExternalId = 1;
+}
+
+message LogDeviceQuery {
+    string deviceExternalId = 1;
+    DateRange dateRange = 2;
+    repeated string propertiesCodes = 3;
+}
+
+message PropertyDefinitionBundle {
+    repeated PropertyDefinition propertyDefinition = 1;
+}
+
+message PropertyDefinition {
+    string name = 1;
+    string code = 2;
+}
+
+message DateRange {
+    int64 from = 1;
+    int64 to = 2;
+}
+
+message Log {
+    int64 dateTime = 1;
+    repeated Property properties = 2;
+}
+
+message LogBundle {
+    repeated Log logs = 1;
+}
+
+message Property {
+    string name = 1;
+    string code = 2;
+    string unit = 3;
+    oneof value {
+        string stringValue = 4;
+        int64 longValue = 5;
+        double doubleValue = 6;
+    }
+    enum ValueType {
+        LONG = 0;
+        DOUBLE = 1;
+        STRING = 2;
+    }
+    ValueType valueType = 7;
+}
