@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login page</title>
+    <th:block th:insert="~{fragments/common.html :: header}"/>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+<div class="container">
+    <h1 th:text="#{page.login}">Login page</h1>
+
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <label for="username" th:text="#{username}">Username</label>
+            <input type="text" class="form-control" id="username" name="username" autofocus="autofocus"/>
+        </div>
+
+        <div class="form-group">
+            <label for="password" th:text="#{password}">Password</label>:
+            <input type="password" class="form-control" id="password" name="password"/>
+        </div>
+        <button type="submit" value="Log in" class="btn btn-primary" th:text="#{signin}">Log in</button>
+    </form>
+</div>
+</body>
+</html>
