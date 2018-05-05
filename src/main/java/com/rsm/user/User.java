@@ -16,6 +16,6 @@ public class User extends BaseEntity {
     private String password;
 
     @ElementCollection
-    private Set<USER_ROLE> userRoles;
+    private Set<USER_ROLE> roles;
 
 }
