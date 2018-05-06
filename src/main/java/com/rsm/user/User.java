@@ -1,9 +1,7 @@
 package com.rsm.user;
 
-import com.rsm.common.BaseEntity;
-import com.rsm.entity.Role;
+import com.rsm.role.Role;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.Set;

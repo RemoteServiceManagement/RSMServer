@@ -1,6 +1,7 @@
-package com.rsm.entity;
+package com.rsm.employee;
 
 
+import com.rsm.report.Report;
 import com.rsm.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +32,9 @@ public class Employee{
     @OneToOne(cascade = CascadeType.ALL)
     @NotNull
     @Valid
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "USER_ID")
     private User user;
+
+    @OneToMany(mappedBy = "employee")
+    private List<Report> reports;
 }

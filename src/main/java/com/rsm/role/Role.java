@@ -1,4 +1,4 @@
-package com.rsm.entity;
+package com.rsm.role;
 
 import lombok.Getter;
 import lombok.Setter;
