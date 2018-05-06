@@ -1,4 +1,4 @@
-package com.rsm.user;
+package com.rsm.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

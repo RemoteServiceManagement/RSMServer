@@ -1,5 +1,6 @@
 package com.rsm.role;
 
+import com.rsm.common.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,10 +14,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Table(name = "ROLE")
-public class Role {
-    @Id
-    @Column(name="ROLE_ID")
-    private Long roleId;
+public class Role extends BaseEntity {
 
     @Column(name="ROLE_NAME")
     private String roleName;
