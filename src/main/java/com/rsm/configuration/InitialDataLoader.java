@@ -36,6 +36,7 @@ public class InitialDataLoader implements ApplicationListener<ApplicationReadyEv
     private final CustomerService customerService;
     private final DeviceService deviceService;
     private final ReportService reportService;
+
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
         //temporary: execute script data.sql and login on adam_adamowicz instead of admin
@@ -50,57 +51,68 @@ public class InitialDataLoader implements ApplicationListener<ApplicationReadyEv
         attachReportsToEmployees();
     }
 
-    private void attachReportsToEmployees(){
-        Optional<User> employeeUserOptional=userService.findByUsername("adam_adamowicz");
-        Optional<User> customerUserOptional=userService.findByUsername("adam_klient");
-        if(employeeUserOptional.isPresent()){
-            Optional<Employee> employeeOptional=employeeService.findByUser(employeeUserOptional.get());
-            Optional<Customer> customerOptional=customerService.findByUser(customerUserOptional.get());
+    private void attachReportsToEmployees() {
+        Optional<User> employeeUserOptional = userService.findByUsername("adam_adamowicz");
+        Optional<User> customerUserOptional = userService.findByUsername("adam_klient");
+        if (employeeUserOptional.isPresent()) {
+            Optional<Employee> employeeOptional = employeeService.findByUser(employeeUserOptional.get());
+            Optional<Customer> customerOptional = customerService.findByUser(customerUserOptional.get());
 
-            List<Report> reports=reportService.findAll();
-            Employee employee=employeeOptional.get();
+            List<Report> reports = reportService.findAll();
+            Employee employee = employeeOptional.get();
             employee.setReports(reports);
             employeeService.save(employee);
 
-            Customer customer=customerOptional.get();
+            Customer customer = customerOptional.get();
             customer.setReports(reports);
             customerService.save(customer);
+            Device device1 = new Device();
+            device1.setBrand("SAMSUNG");
+            device1.setModel("ABC");
+            device1.setSerialNumber("0001234HUAHUA1234");
+            device1.setDescription("Desc 1");
+            device1.setExternalId("#EXTERNALID9999345");
+
+            Device device2 = new Device();
+            device2.setBrand("LOGITECH");
+            device2.setModel("CCC");
+            device2.setSerialNumber("0007777LLAA5555");
+            device2.setDescription("Desc 2");
+            device2.setExternalId("#EXTERNALID1114447");
+
+            Device device3 = new Device();
+            device3.setBrand("ASUS");
+            device3.setModel("DDDD");
+            device3.setSerialNumber("7424PINGPONG3787");
+            device3.setDescription("Desc 3");
+            device3.setExternalId("#EXTERNALID777788");
+
+            Report report1 = new Report();
+            Report report2 = new Report();
+            Report report3 = new Report();
 
 
+            report1.setTitle("AWARIA PRALKI");
+            report1.setDevice(device1);
+            report1.setDescription("Nie reaguje na programowanie polecenia");
+            report1.setEmployee(employee);
+            report1.setCustomer(customer);
 
-            Optional<Device> optionalDevice1=deviceService.findById(1L);
-            Optional<Device> optionalDevice2=deviceService.findById(2L);
-            Optional<Device> optionalDevice3=deviceService.findById(3L);
-            Report report1=new Report();
-            Report report2=new Report();
-            Report report3=new Report();
-            if(optionalDevice1.isPresent() &&
-                    optionalDevice2.isPresent() && optionalDevice3.isPresent()){
+            report2.setTitle("AWARIA ZMYWARKI");
+            report2.setDevice(device2);
+            report2.setDescription("Nie wykonuje cyklu mycia");
+            report2.setEmployee(employee);
+            report2.setCustomer(customer);
 
+            report3.setTitle("AWARIA LODÓWKI");
+            report3.setDevice(device3);
+            report3.setDescription("Z wnętrza wydobywają się dziwne dźwięki");
+            report3.setEmployee(employee);
+            report3.setCustomer(customer);
 
-
-                report1.setTitle("AWARIA PRALKI");
-                report1.setDevice(optionalDevice1.get());
-                report1.setDescription("Nie reaguje na programowanie polecenia");
-                report1.setEmployee(employee);
-                report1.setCustomer(customer);
-
-                report2.setTitle("AWARIA ZMYWARKI");
-                report2.setDevice(optionalDevice2.get());
-                report2.setDescription("Nie wykonuje cyklu mycia");
-                report2.setEmployee(employee);
-                report2.setCustomer(customer);
-
-                report3.setTitle("AWARIA LODÓWKI");
-                report3.setDevice(optionalDevice3.get());
-                report3.setDescription("Z wnętrza wydobywają się dziwne dźwięki");
-                report3.setEmployee(employee);
-                report3.setCustomer(customer);
-
-                reportService.save(report1);
-                reportService.save(report2);
-                reportService.save(report3);
-            }
+            reportService.save(report1);
+            reportService.save(report2);
+            reportService.save(report3);
         }
     }
 }

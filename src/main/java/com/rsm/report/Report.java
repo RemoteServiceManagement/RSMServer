@@ -6,6 +6,7 @@ import com.rsm.device.Device;
 import com.rsm.employee.Employee;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -27,9 +28,10 @@ public class Report{
     @JsonIgnore
     @Column(name="REPORT_PHOTO")
     @Lob
+    @Type(type="binary")
     private byte[] reportPhoto;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="DEVICE_ID")
     private Device device;
 
