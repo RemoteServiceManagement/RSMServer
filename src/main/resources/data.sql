@@ -1,0 +1,18 @@
+/*
+  h2-console
+default db name:jdbc:h2:mem:testdb
+ */
+--roles
+INSERT INTO ROLE(ROLE_ID,ROLE_NAME,ROLE_DESCRIPTION) VALUES(1,'ROLE_ADMIN','Admin Role');
+INSERT INTO ROLE(ROLE_ID,ROLE_NAME,ROLE_DESCRIPTION) VALUES(2,'ROLE_EMPLOYEE','Employee Role');
+INSERT INTO ROLE(ROLE_ID,ROLE_NAME,ROLE_DESCRIPTION) VALUES(3,'ROLE_CUSTOMER','Customer Role');
+
+--accounts
+/*password=password */
+--employee_accounts
+INSERT INTO USER_T(USERNAME,PASSWORD,ENABLED,CREDENTIALS_EXPIRED,EXPIRED,LOCKED)
+VALUES ('adam_adamowicz','$2a$10$aiBgroa5UbCph3gb4WSiD.njeKqgsjXmHv/pbXiRVAYPMlewWDLD6',true,false,false,false);
+
+--account_role
+INSERT INTO USER_ROLE(USER_ID,ROLE_ID) SELECT a.USER_ID,r.ROLE_ID FROM USER_T a,ROLE r WHERE a.USERNAME='adam_adamowicz'
+and r.ROLE_ID=1;
