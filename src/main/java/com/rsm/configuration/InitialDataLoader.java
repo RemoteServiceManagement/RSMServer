@@ -8,6 +8,7 @@ import com.rsm.employee.Employee;
 import com.rsm.employee.EmployeeService;
 import com.rsm.report.Report;
 import com.rsm.report.ReportService;
+import com.rsm.report.ReportStatus;
 import com.rsm.user.User;
 import com.rsm.user.UserRepository;
 import com.rsm.user.service.UserService;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -95,18 +97,24 @@ public class InitialDataLoader implements ApplicationListener<ApplicationReadyEv
             report1.setTitle("AWARIA PRALKI");
             report1.setDevice(device1);
             report1.setDescription("Nie reaguje na programowanie polecenia");
+            report1.setReportDate(LocalDate.of(2018,5,1));
+            report1.setReportStatus(ReportStatus.ACCEPTED);
             report1.setEmployee(employee);
             report1.setCustomer(customer);
 
             report2.setTitle("AWARIA ZMYWARKI");
             report2.setDevice(device2);
             report2.setDescription("Nie wykonuje cyklu mycia");
+            report2.setReportDate(LocalDate.of(2018,5,2));
+            report2.setReportStatus(ReportStatus.ACCEPTED);
             report2.setEmployee(employee);
             report2.setCustomer(customer);
 
             report3.setTitle("AWARIA LODÓWKI");
             report3.setDevice(device3);
             report3.setDescription("Z wnętrza wydobywają się dziwne dźwięki");
+            report3.setReportDate(LocalDate.of(2018,5,3));
+            report3.setReportStatus(ReportStatus.ACCEPTED);
             report3.setEmployee(employee);
             report3.setCustomer(customer);
 
