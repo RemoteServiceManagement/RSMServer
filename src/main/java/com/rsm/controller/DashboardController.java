@@ -80,4 +80,12 @@ public class DashboardController {
         return "customerDashboard";
     }
 
+    @GetMapping("/masterDashboard")
+    public String masterDashboard(Model model, Principal principal) {
+        List<Report> reports = reportService.findUnassigned();
+        model.addAttribute("reports", reports);
+        model.addAttribute("reportCounter", reports.size());
+        return "masterDashboard";
+    }
+
 }

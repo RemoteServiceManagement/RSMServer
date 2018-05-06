@@ -89,4 +89,15 @@ public class ReportServiceImpl implements ReportService {
         reportRepository.save(report);
         employeeService.save(employee);
     }
+
+    @Override
+    public List<Report> findUnassigned() {
+        List<Report> reports = this.findAll();
+        List<Report> unassigned = new ArrayList<>();
+        for(Report report : reports) {
+            if(report.getEmployee() == null)
+                unassigned.add(report);
+        }
+        return unassigned;
+    }
 }

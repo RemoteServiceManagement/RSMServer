@@ -37,6 +37,12 @@ public class SimpleAuthenticationSuccessHandler implements AuthenticationSuccess
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else if (authority.getAuthority().equals("ROLE_MASTER") ) {
+                try {
+                    redirectStrategy.sendRedirect(request, response, "/dashboard/masterDashboard");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 throw new IllegalStateException();
             }

@@ -41,15 +41,6 @@ public class InitialDataLoader implements ApplicationListener<ApplicationReadyEv
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        //temporary: execute script data.sql and login on adam_adamowicz instead of admin
- /*       if (!userRepository.findByUsername("admin").isPresent()) {
-            User user = new User();
-            user.setUsername("admin");
-            user.setPassword(passwordEncoder.encode("admin"));
-            user.setEnabled(true);
-            userRepository.save(user);
-        }*/
-
         attachReportsToEmployees();
     }
 

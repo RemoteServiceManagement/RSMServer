@@ -53,7 +53,7 @@ public class ReportController {
             }
         }
         reportService.attachReportToCustomer(report,principal.getName());
-        reportService.attachReportToRandomEmployee(report);
+        //reportService.attachReportToRandomEmployee(report);
         reportService.save(report);
         return "redirect:/dashboard/customerDashboard";
     }
