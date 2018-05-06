@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name="REPORT")
@@ -31,6 +32,14 @@ public class Report{
     @ManyToOne
     @JoinColumn(name="DEVICE_ID")
     private Device device;
+
+    @Column(name="REPORT_DATE")
+    private LocalDate reportDate;
+
+    @Column(name="REPORT_STATUS")
+    @Enumerated(EnumType.STRING)
+    private ReportStatus reportStatus;
+
 
     @ManyToOne
     @JoinColumn(name="EMPLOYEE_ID")
