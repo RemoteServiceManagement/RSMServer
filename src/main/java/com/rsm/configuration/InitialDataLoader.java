@@ -23,7 +23,6 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -45,12 +44,9 @@ public class InitialDataLoader implements ApplicationListener<ApplicationReadyEv
     }
 
     private void attachReportsToEmployees() {
-        Optional<User> employeeUserOptional = userService.findByUsername("adam_adamowicz");
-        Optional<User> customerUserOptional = userService.findByUsername("adam_klient");
-        if (employeeUserOptional.isPresent()) {
-            Optional<Employee> employeeOptional = employeeService.findByUser(employeeUserOptional.get());
-            Optional<Customer> customerOptional = customerService.findByUser(customerUserOptional.get());
-
+        Optional<Employee> employeeOptional = employeeService.findByUsername("adam_adamowicz");
+        Optional<Customer> customerOptional = customerService.findByUsername("adam_klient");
+        if (employeeOptional.isPresent()) {
             List<Report> reports = reportService.findAll();
             Employee employee = employeeOptional.get();
             employee.setReports(reports);
@@ -115,3 +111,4 @@ public class InitialDataLoader implements ApplicationListener<ApplicationReadyEv
         }
     }
 }
+

@@ -1,6 +1,5 @@
 package com.rsm.employee;
 
-import com.rsm.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +21,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Optional<Employee> findByUser(User user) {
-        return employeeRepository.findByUser(user);
+    public Optional<Employee> findByUsername(String username) {
+        return employeeRepository.findByUsername(username);
     }
 
     @Override

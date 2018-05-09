@@ -1,7 +1,6 @@
 package com.rsm.customer;
 
 import com.rsm.role.RoleService;
-import com.rsm.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,8 +27,8 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public Optional<Customer> findByUser(User user) {
-        return customerRepository.findByUser(user);
+    public Optional<Customer> findByUsername(String username) {
+        return customerRepository.findByUsername(username);
     }
 
     @Override

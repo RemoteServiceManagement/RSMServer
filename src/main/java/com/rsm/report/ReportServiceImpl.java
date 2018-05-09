@@ -4,7 +4,6 @@ import com.rsm.customer.Customer;
 import com.rsm.customer.CustomerService;
 import com.rsm.employee.Employee;
 import com.rsm.employee.EmployeeService;
-import com.rsm.user.User;
 import com.rsm.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -57,8 +56,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional
     public void attachReportToCustomer(Report report, String username){
-        Optional<User> userOptional=userService.findByUsername(username);
-        Optional<Customer> optionalCustomer=customerService.findByUser(userOptional.get());
+        Optional<Customer> optionalCustomer=customerService.findByUsername(username);
         Customer customer=optionalCustomer.get();
         List<Report> customerReports=customer.getReports();
         if(customerReports == null){
