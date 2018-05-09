@@ -41,19 +41,6 @@
             </div>
         </div>
 </header>
-<section id="action" class="py-4 mb-4 bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <button id="addReportLink" class="btn btn-primary btn-block"
-                   data-toggle="modal" data-target="#addReportModal"
-                   th:attr="data-target='#addReportModal'" onclick="changeModalContent()">
-                    <i class="fa fa-plus"></i> Zgłoś usterkę
-                </button>
-            </div>
-        </div>
-    </div>
-</section>
 
 <section id="reports">
     <div class="container">
@@ -61,7 +48,7 @@
             <div class="col-md-9">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Bieżące zgłoszenia</h4>
+                        <h4>Nieprzypisane zgłoszenia:</h4>
                     </div>
                     <table class="table table-striped">
                         <thead class="thead-inverse">
@@ -72,6 +59,7 @@
                             <th>Opis</th>
                             <th>Data</th>
                             <th>Status</th>
+                            <th>Akcja</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -85,7 +73,7 @@
                             <td th:text="${report.reportDate}"></td>
                             <td th:text="${report.reportStatus.reportStatusName}"></td>
                             <td><a href="#" class="btn btn-secondary">
-                                <i class="fa fa-angle-double-right"></i> Szczegóły
+                                <i class="fa fa-angle-double-right"></i> Przypisz
                             </a></td>
                         </tr>
                         </tbody>

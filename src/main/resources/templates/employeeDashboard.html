@@ -37,6 +37,8 @@
                             <th>Tytuł</th>
                             <th>Urządzenie</th>
                             <th>Opis</th>
+                            <th>Data</th>
+                            <th>Status</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -47,7 +49,9 @@
                             <td th:if="${report.device!=null}" th:text="${report.device.brand + ' ' + report.device.model}"></td>
                             <td th:if="${report.device == null}" th:text="${'brak danych'}"></td>
                             <td th:text="${report.description}"></td>
-                            <td><a href="#" class="btn btn-secondary">
+                            <td th:text="${report.reportDate}"></td>
+                            <td th:text="${report.reportStatus.reportStatusName}"></td>
+                            <td><a th:href="@{'/dashboard/employeeDashboard/reportDetails/' + ${report.reportId}}" class="btn btn-secondary">
                                 <i class="fa fa-angle-double-right"></i> Szczegóły
                             </a></td>
                         </tr>
