@@ -5,7 +5,6 @@ import com.rsm.customer.CustomerService;
 import com.rsm.employee.Employee;
 import com.rsm.employee.EmployeeService;
 import com.rsm.report.Report;
-import com.rsm.user.User;
 import com.rsm.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -28,9 +27,8 @@ public class DashboardController {
    @GetMapping("/employeeDashboard")
    public String employeeDashboard(Model model,Principal principal) {
        String username=principal.getName();
-       Optional<User> userOptional=userService.findByUsername(username);
-       if(userOptional.isPresent()){
-            Optional<Employee> optionalEmployee=employeeService.findByUser(userOptional.get());
+       Optional<Employee> optionalEmployee =employeeService.findByUsername(username);
+       if(optionalEmployee.isPresent()){
             List<Report> reports=optionalEmployee.get().getReports();
             model.addAttribute("reports",reports);
             model.addAttribute("reportCounter",reports.size());
@@ -40,9 +38,8 @@ public class DashboardController {
     @GetMapping("/customerDashboard")
     public String customerDashboard(Model model,Principal principal) {
         String username=principal.getName();
-        Optional<User> userOptional=userService.findByUsername(username);
-        if(userOptional.isPresent()){
-            Optional<Customer> optionalCustomer=customerService.findByUser(userOptional.get());
+        Optional<Customer> optionalCustomer=customerService.findByUsername(username);
+        if(optionalCustomer.isPresent()){
             List<Report> reports=optionalCustomer.get().getReports();
             model.addAttribute("reports",reports);
             model.addAttribute("reportCounter",reports.size());
