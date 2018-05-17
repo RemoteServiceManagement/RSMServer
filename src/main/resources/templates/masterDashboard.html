@@ -36,7 +36,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h1><i class="fa fa-gear"></i> Panel Klienta</h1>
+                    <h1><i class="fa fa-gear"></i> Panel Dyspozytora</h1>
                 </div>
             </div>
         </div>
@@ -72,7 +72,7 @@
                             <td th:text="${report.description}"></td>
                             <td th:text="${report.reportDate}"></td>
                             <td th:text="${report.reportStatus.reportStatusName}"></td>
-                            <td><a href="#" class="btn btn-secondary">
+                            <td><a th:href="@{'/master/assignReport/'+${report.reportId}}" class="btn btn-secondary">
                                 <i class="fa fa-angle-double-right"></i> Przypisz
                             </a></td>
                         </tr>

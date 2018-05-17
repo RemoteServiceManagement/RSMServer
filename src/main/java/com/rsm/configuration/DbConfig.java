@@ -8,7 +8,7 @@ import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import javax.sql.DataSource;
-
+/*
 @Configuration
 public class DbConfig {
     @Bean
@@ -22,3 +22,4 @@ public class DbConfig {
         return dataSourceInitializer;
     }
 }
+*/
