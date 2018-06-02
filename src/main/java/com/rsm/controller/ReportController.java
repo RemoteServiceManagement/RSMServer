@@ -42,7 +42,7 @@ public class ReportController {
     public String reportFormPost(@ModelAttribute("report")Report report, BindingResult result, Model model,
                                  @RequestParam(name = "file",required = false) MultipartFile file,
                                  Principal principal){
-        if(file!=null) {
+        if(file!=null && !file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
                 report.setReportPhoto(bytes);
