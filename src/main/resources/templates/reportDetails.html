@@ -52,7 +52,7 @@
                     <div class="card-body">
                         <div>
                             <h3>Szczegóły zgłoszenia</h3>
-                            <p th:text="${'Id zgłoszenia: ' +  report.reportId}">
+                            <p th:text="${'Id zgłoszenia: ' +  report.id}">
                             <p th:text="${'Tytuł zgłoszenia: ' +  report.title}">
                             <p th:text="${'Opis problemu: ' +  report.description}">
                             <p th:text="${'Nazwa urządzenia:' + report.device.brand + ' ' + report.device.model}">
@@ -61,7 +61,7 @@
                             <p th:text="${'Wewnętrzny numer identyfikacyjny urządzenia :' + report.device.externalId}">
                         </div>
                         <form th:action="@{/dashboard/employeeDashboard/reportDetails}" method="post" th:object="${report}">
-                            <input type="hidden" th:field="*{reportId}" />
+                            <input type="hidden" th:field="*{id}" />
                             <div class="form-group">
                                 <label for="reportStatus">Status zgłoszenia</label>
                                 <select id="reportStatus" class="form-control" th:field="*{reportStatus}">

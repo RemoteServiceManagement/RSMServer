@@ -1,6 +1,7 @@
 package com.rsm.report;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rsm.common.BaseEntity;
 import com.rsm.customer.Customer;
 import com.rsm.device.Device;
 import com.rsm.employee.Employee;
@@ -15,11 +16,7 @@ import java.time.LocalDate;
 @Table(name="REPORT")
 @Getter
 @Setter
-public class Report{
-    @Id
-    @Column(name="REPORT_ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reportId;
+public class Report extends BaseEntity {
     @Column(name="TITLE")
     private String title;
     @Column(name="DESCRIPTION")

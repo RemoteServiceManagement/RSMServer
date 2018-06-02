@@ -77,7 +77,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="report: ${reports}">
-                            <td th:text="${report.reportId}"></td>
+                            <td th:text="${report.id}"></td>
                             <td th:text="${report.title}"></td>
                             <td th:if="${report.device!=null}" th:text="${report.device.brand + ' ' + report.device.model}"></td>
                             <td th:if="${report.device == null}" th:text="${'brak danych'}"></td>

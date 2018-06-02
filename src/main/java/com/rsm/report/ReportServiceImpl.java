@@ -1,6 +1,7 @@
 package com.rsm.report;
 
 import com.rsm.customer.Customer;
+import com.rsm.customer.CustomerDoesNotExistException;
 import com.rsm.customer.CustomerService;
 import com.rsm.employee.Employee;
 import com.rsm.employee.EmployeeService;
@@ -23,7 +24,8 @@ public class ReportServiceImpl implements ReportService {
     private final EmployeeService employeeService;
     private final CustomerService customerService;
     private final UserService userService;
-    private final static Logger LOG= LoggerFactory.getLogger(ReportServiceImpl.class);
+    private final static Logger LOG = LoggerFactory.getLogger(ReportServiceImpl.class);
+
     @Override
     public List<Report> findAll() {
         return reportRepository.findAll();
@@ -53,33 +55,27 @@ public class ReportServiceImpl implements ReportService {
     public void deleteById(Long id) {
         reportRepository.deleteById(id);
     }
+
     @Override
     @Transactional
-    public void attachReportToCustomer(Report report, String username){
-        Optional<Customer> optionalCustomer=customerService.findByUsername(username);
-        Customer customer=optionalCustomer.get();
-        List<Report> customerReports=customer.getReports();
-        if(customerReports == null){
-            customerReports=new ArrayList<>();
-        }
-        customerReports.add(report);
-        customer.setReports(customerReports);
+    public void attachReportToCustomer(Report report, String username) {
+        Optional<Customer> optionalCustomer = customerService.findByUsername(username);
+        Customer customer = optionalCustomer.orElseThrow(CustomerDoesNotExistException::new);
         report.setCustomer(customer);
         reportRepository.save(report);
-        customerService.save(customer);
 
     }
 
     @Override
     @Transactional
     public void attachReportToRandomEmployee(Report report) {
-        List<Employee> employees=employeeService.findAll();
+        List<Employee> employees = employeeService.findAll();
         int randomIndex = new Random().nextInt(employees.size());
         LOG.info("randomEmployeeIndex: " + randomIndex);
-        Employee employee=employees.get(randomIndex);
-        List<Report> employeeReports=employee.getReports();
-        if(employeeReports == null){
-            employeeReports=new ArrayList<>();
+        Employee employee = employees.get(randomIndex);
+        List<Report> employeeReports = employee.getReports();
+        if (employeeReports == null) {
+            employeeReports = new ArrayList<>();
         }
         employeeReports.add(report);
         employee.setReports(employeeReports);
@@ -92,8 +88,8 @@ public class ReportServiceImpl implements ReportService {
     public List<Report> findUnassigned() {
         List<Report> reports = this.findAll();
         List<Report> unassigned = new ArrayList<>();
-        for(Report report : reports) {
-            if(report.getEmployee() == null)
+        for (Report report : reports) {
+            if (report.getEmployee() == null)
                 unassigned.add(report);
         }
         return unassigned;
