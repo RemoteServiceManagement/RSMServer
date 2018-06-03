@@ -24,6 +24,7 @@ import javax.persistence.Table;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name="REPORT")
@@ -63,7 +64,7 @@ public class Report extends BaseEntity {
 
     private String diagnosis;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "report")
     private List<BasicPropertyDefinition> chosenProperty;
 
     private Instant chosenDateFrom;
@@ -78,4 +79,7 @@ public class Report extends BaseEntity {
         return getDevice().getExternalId();
     }
 
+    public List<String> getChosenPropertyCode() {
+        return getChosenProperty().stream().map(BasicPropertyDefinition::getCode).collect(Collectors.toList());
+    }
 }

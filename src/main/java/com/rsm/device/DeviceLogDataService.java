@@ -2,6 +2,7 @@ package com.rsm.device;
 
 import com.rsm.device.log.LogDeviceInfo;
 import com.rsm.device.log.remote.RemoteDeviceLogService;
+import com.rsm.device.property.BasicPropertyService;
 import com.rsm.property.BasicPropertyDefinition;
 import com.rsm.property.PropertyDefinitionNameDto;
 import com.rsm.report.Report;
@@ -11,29 +12,36 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.threeten.extra.Interval;
 
+import javax.transaction.Transactional;
 import java.sql.Date;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Date.from;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Created by Dawid on 03.06.2018 at 17:14.
  */
 
 @Service
+@Transactional
 @RequiredArgsConstructor
-public class DeviceLogBasicDataService {
+public class DeviceLogDataService {
     private final RemoteDeviceLogService remoteDeviceLogService;
     private final ReportRepository reportRepository;
+    private final BasicPropertyService propertyService;
 
     public LogDeviceInfo getLogDeviceInfo(Long reportId) {
-        Report report = reportRepository.findById(reportId).orElseThrow(ReportDoesNotExistException::new);
+        Report report = getReport(reportId);
         return toLogDeviceInfo(report);
+    }
+
+    private Report getReport(Long reportId) {
+        return reportRepository.findById(reportId).orElseThrow(ReportDoesNotExistException::new);
     }
 
     private LogDeviceInfo toLogDeviceInfo(Report report) {
@@ -41,7 +49,7 @@ public class DeviceLogBasicDataService {
         LogDeviceInfo logDeviceInfo = LogDeviceInfo.builder()
                 .chosenDateFrom(getDate(report.getChosenDateFrom()))
                 .chosenDateTo(getDate(report.getChosenDateTo()))
-                .definitionNames(report.getChosenProperty().stream().map(this::toChosenProperty).collect(Collectors.toList()))
+                .definitionNames(report.getChosenProperty().stream().map(this::toChosenProperty).collect(toList()))
                 .availableDataFrom(from(availableInterval.getStart()))
                 .availableDataTo(from(availableInterval.getEnd()))
                 .build();
@@ -59,7 +67,7 @@ public class DeviceLogBasicDataService {
                 .getDevicePropertiesDefinition(report.getReportedDeviceServiceCredential(),
                         report.getReportedDeviceExternalId());
         List<PropertyDefinitionNameDto> remoteProperty = devicePropertiesDefinition.stream()
-                .map(this::toNotChosenProperty).collect(Collectors.toList());
+                .map(this::toNotChosenProperty).collect(toList());
 
         HashSet<PropertyDefinitionNameDto> merged = new HashSet<>();
         merged.addAll(definitionNames);
@@ -79,5 +87,37 @@ public class DeviceLogBasicDataService {
 
     private PropertyDefinitionNameDto toChosenProperty(BasicPropertyDefinition definition) {
         return new PropertyDefinitionNameDto(definition.getName(), definition.getCode(), true);
+    }
+
+    public void updateData(LogDeviceInfo logDeviceInfo, Long reportId) {
+        Report report = getReport(reportId);
+        propertyService.removeAll(report.getChosenProperty());
+
+        Instant chosenDateFrom = logDeviceInfo.getChosenDateFrom().toInstant();
+        report.setChosenDateFrom(chosenDateFrom);
+        Instant chosenDateTo = logDeviceInfo.getChosenDateTo().toInstant();
+        report.setChosenDateTo(chosenDateTo);
+        report.setChosenProperty(toChosenProperty(logDeviceInfo.getDefinitionNames(), report));
+
+
+        Interval interval = Interval.of(chosenDateFrom, chosenDateTo);
+        List<String> chosenProperty = report.getChosenPropertyCode();
+
+        reportRepository.save(report);
+        remoteDeviceLogService.downloadDeviceLogs(report.getReportedDeviceServiceCredential(),
+                report.getReportedDeviceExternalId(), interval, chosenProperty, reportId);
+    }
+
+    private List<BasicPropertyDefinition> toChosenProperty(List<PropertyDefinitionNameDto> definitionNames, Report report) {
+        return definitionNames
+                .stream()
+                .filter(PropertyDefinitionNameDto::isChosen)
+                .map(this::toBasicProperty)
+                .peek(property -> property.setReport(report))
+                .collect(toList());
+    }
+
+    private BasicPropertyDefinition toBasicProperty(PropertyDefinitionNameDto property) {
+        return new BasicPropertyDefinition(property.getName(), property.getCode());
     }
 }
