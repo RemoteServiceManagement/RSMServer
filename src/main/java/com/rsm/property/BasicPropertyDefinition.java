@@ -1,8 +1,11 @@
-package com.rsm.property.dto;
+package com.rsm.property;
 
+import com.rsm.common.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
 
 /**
  * Created by Dawid on 04.05.2018 at 00:23.
@@ -10,7 +13,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BasicPropertyDefinitionDto {
+@Entity
+public class BasicPropertyDefinition extends BaseEntity {
     private String name;
     private String code;
 }

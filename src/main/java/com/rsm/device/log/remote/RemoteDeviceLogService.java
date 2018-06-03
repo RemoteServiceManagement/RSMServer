@@ -4,14 +4,19 @@ import com.rsm.device.DeviceLogDto;
 import com.rsm.device.log.LogDeviceParameterRepository;
 import com.rsm.device.log.remote.connection.RemoteServiceCredential;
 import com.rsm.device.log.remote.connection.RemoteServiceFactory;
-import com.rsm.property.dto.BasicPropertyDefinitionDto;
-import com.service.remote.grpc.*;
+import com.rsm.property.BasicPropertyDefinition;
+import com.service.remote.grpc.DateRange;
+import com.service.remote.grpc.DeviceBasicQuery;
+import com.service.remote.grpc.Log;
+import com.service.remote.grpc.LogBundle;
+import com.service.remote.grpc.LogDeviceQuery;
+import com.service.remote.grpc.LogDeviceServiceGrpc;
+import com.service.remote.grpc.PropertyDefinitionBundle;
 import io.grpc.ManagedChannel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.threeten.extra.Interval;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,7 +49,7 @@ public class RemoteDeviceLogService {
     }
 
     public void downloadDeviceLogs(RemoteServiceCredential serviceCredential, String deviceExternalId, Interval interval,
-                                   List<String> propertyCodes) {
+                                   List<String> propertyCodes, Long reportId) {
         ManagedChannel channel = connectionFactory.create(serviceCredential);
         LogDeviceServiceGrpc.LogDeviceServiceBlockingStub service = LogDeviceServiceGrpc.newBlockingStub(channel);
         Iterator<LogBundle> logs = service.getLogs(createGetLogsQuery(deviceExternalId, interval, propertyCodes));
@@ -52,10 +57,16 @@ public class RemoteDeviceLogService {
 
         if (logs.hasNext()) {
             List<Log> logBundle = mapLogs(logBundles);
-            repository.save(new DeviceLogDto(deviceExternalId, LogDeviceMapper.map(logBundle)));
+            repository.save(new DeviceLogDto(deviceExternalId, LogDeviceMapper.map(logBundle)), reportId);
 
         }
         channel.shutdown();
+    }
+
+    public boolean deviceExist(RemoteServiceCredential serviceCredential, String deviceExternalId) {
+        ManagedChannel channel = connectionFactory.create(serviceCredential);
+        LogDeviceServiceGrpc.LogDeviceServiceBlockingStub service = LogDeviceServiceGrpc.newBlockingStub(channel);
+        return service.deviceExist(DeviceBasicQuery.newBuilder().setDeviceExternalId(deviceExternalId).build()).getExist();
     }
 
     private LogDeviceQuery createGetLogsQuery(String deviceExternalId, Interval interval, List<String> propertyCodes) {
@@ -76,8 +87,8 @@ public class RemoteDeviceLogService {
                 .collect(Collectors.toList());
     }
 
-    public List<BasicPropertyDefinitionDto> getDevicePropertiesDefinition(RemoteServiceCredential serviceCredential,
-                                                                          String deviceExternalId) {
+    public List<BasicPropertyDefinition> getDevicePropertiesDefinition(RemoteServiceCredential serviceCredential,
+                                                                       String deviceExternalId) {
         ManagedChannel channel = connectionFactory.create(serviceCredential);
         LogDeviceServiceGrpc.LogDeviceServiceBlockingStub service = LogDeviceServiceGrpc.newBlockingStub(channel);
         PropertyDefinitionBundle propertyDefinitionBundle = service.getDevicePropertyNames(DeviceBasicQuery.newBuilder()
@@ -86,7 +97,7 @@ public class RemoteDeviceLogService {
         channel.shutdown();
         return ofNullable(propertyDefinitionBundle.getPropertyDefinitionList())
                 .map(that -> that.stream()
-                        .map(property -> new BasicPropertyDefinitionDto(property.getName(), property.getCode()))
+                        .map(property -> new BasicPropertyDefinition(property.getName(), property.getCode()))
                         .collect(Collectors.toList()))
                 .orElse(new ArrayList<>());
 

@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible"
           content="ie=edge" />
     <title>Serwisowanie Online</title>
+    <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
@@ -72,9 +73,13 @@
                             <td th:text="${report.description}"></td>
                             <td th:text="${report.reportDate}"></td>
                             <td th:text="${report.reportStatus.reportStatusName}"></td>
-                            <td><a th:href="@{'/master/assignReport/'+${report.id}}" class="btn btn-secondary">
+                            <td><a th:href="@{'/master/assignReport/'+${report.id}}" class="btn btn-secondary action-btn">
                                 <i class="fa fa-angle-double-right"></i> Przypisz
-                            </a></td>
+                            </a>
+                                <a th:href="@{'/master/diagnosis/'+${report.id} + '/details'}" class="btn btn-primary action-btn">
+                                    <i class="fa fa-angle-double-right"></i> Diagnoza
+                                </a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

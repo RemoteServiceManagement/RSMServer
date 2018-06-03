@@ -6,10 +6,15 @@ service LogDeviceService {
     rpc getDateRangeByDeviceExternalId(DeviceBasicQuery) returns (DateRange);
     rpc getLogs(LogDeviceQuery) returns (stream LogBundle);
     rpc getDevicePropertyNames(DeviceBasicQuery) returns (PropertyDefinitionBundle);
+    rpc deviceExist(DeviceBasicQuery)  returns (DeviceExistResponse);
 }
 
 message DeviceBasicQuery {
     string deviceExternalId = 1;
+}
+
+message DeviceExistResponse {
+    bool exist = 1;
 }
 
 message LogDeviceQuery {

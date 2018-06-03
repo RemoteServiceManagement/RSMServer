@@ -4,13 +4,26 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rsm.common.BaseEntity;
 import com.rsm.customer.Customer;
 import com.rsm.device.Device;
+import com.rsm.device.log.remote.connection.RemoteServiceCredential;
 import com.rsm.employee.Employee;
+import com.rsm.property.BasicPropertyDefinition;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name="REPORT")
@@ -47,5 +60,22 @@ public class Report extends BaseEntity {
     @ManyToOne
     @JoinColumn(name="CUSTOMER_ID")
     private Customer customer;
+
+    private String diagnosis;
+
+    @OneToMany
+    private List<BasicPropertyDefinition> chosenProperty;
+
+    private Instant chosenDateFrom;
+
+    private Instant chosenDateTo;
+
+    public RemoteServiceCredential getReportedDeviceServiceCredential() {
+        return getDevice().getRemoteServiceCredential();
+    }
+
+    public String getReportedDeviceExternalId() {
+        return getDevice().getExternalId();
+    }
 
 }

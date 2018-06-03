@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible"
+          content="ie=edge"/>
+    <title>Serwisowanie Online</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+          integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+            integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
+</head>
+
+<div th:fragment="details(report, showEmployees)">
+        <div>
+            <h3>Szczegóły zgłoszenia</h3>
+            <p th:text="${'Id zgłoszenia: ' +  report.id}">
+            <p th:text="${'Tytuł zgłoszenia: ' +  report.title}">
+            <p th:text="${'Opis problemu: ' +  report.description}">
+            <p th:text="${'Nazwa urządzenia:' + report.device.brand + ' ' + report.device.model}">
+            <p th:text="${'Opis urządzenia:' + report.device.description}">
+            <p th:text="${'Numer seryjny urządzenia :' + report.device.serialNumber}">
+            <p th:text="${'Wewnętrzny numer identyfikacyjny urządzenia :' + report.device.externalId}">
+        </div>
+        <form th:if="${showEmployees}" th:action="@{/master/assignReport}" method="post" th:object="${report}">
+            <input type="hidden" th:field="*{id}"/>
+            <div class="form-group">
+                <label for="employeesToAssign">Employees</label>
+                <select id="employeesToAssign" class="form-control" th:field="*{employee}">
+                    <option th:each="employee : ${employees}"
+                            th:value="${employee.id}"
+                            th:utext="${employee.username}">
+                    </option>
+                </select>
+            </div>
+            <div class="form-group float-right">
+                <a href="/dashboard/masterDashboard" class="btn btn-secondary">Anuluj</a>
+                <button id="mySubmitBtn" class="btn btn-primary" type="submit">Przypisz</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

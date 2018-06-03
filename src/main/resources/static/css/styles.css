@@ -39,3 +39,20 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+.diagnosis {
+    margin-top: 20px;
+}
+
+.props {
+    padding-right: 20px;
+}
+
+.action-btn {
+    width: 110px;
+    margin: 4px 4px 4px 4px;
+}
+
+.margin-right {
+    margin-right: 5px;
+}

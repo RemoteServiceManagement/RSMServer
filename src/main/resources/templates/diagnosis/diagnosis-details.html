@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible"
           content="ie=edge"/>
     <title>Serwisowanie Online</title>
+    <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
           integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
@@ -18,51 +19,19 @@
             integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
             crossorigin="anonymous"></script>
     <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
-    <script>
-        CKEDITOR.replace('editor1');
-    </script>
 </head>
 <div th:replace="fragments/header::header">
 </div>
-<body>
-<header class="main-header py-2 bg-primary text-white mb-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <h1><i class="fa fa-gear"></i> Panel Klienta</h1>
-            </div>
+
+<div class="container diagnosis">
+    <div class="row">
+        <div class="col-sm-3">
+            <div th:replace="diagnosis/sidebar::sidebar"></div>
+        </div>
+        <div class="col-sm">
+            <div th:replace="report/report-details::details(report=${report}, showEmployees=false)"></div>
         </div>
     </div>
-</header>
-<section id="action" class="py-4 mb-4 bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3 mr-auto">
-                <a href="/dashboard/employeeDashboard" class="btn btn-light btn-block">
-                    <i class="fa fa-arrow-left"></i> Powrót
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="reports">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Edytuj zgłoszenie</h4>
-                    </div>
-                    <div class="card-body">
-                        <div th:replace="report/report-details::details(report=${report}, showEmployees=true)"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
+</div>
 </body>
 </html>

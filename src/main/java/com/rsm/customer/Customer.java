@@ -1,5 +1,6 @@
 package com.rsm.customer;
 
+import com.rsm.device.log.remote.connection.RemoteServiceCredential;
 import com.rsm.report.Report;
 import com.rsm.user.User;
 import lombok.Getter;
@@ -18,4 +19,6 @@ public class Customer extends User {
 
     @OneToMany(mappedBy = "customer")
     private List<Report> reports;
+    @OneToMany(mappedBy = "customer")
+    private List<RemoteServiceCredential> remoteServiceCredentials;
 }

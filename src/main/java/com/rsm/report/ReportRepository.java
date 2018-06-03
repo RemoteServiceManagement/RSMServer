@@ -1,6 +1,9 @@
 package com.rsm.report;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface ReportRepository extends JpaRepository<Report,Long> {
+import java.util.List;
+
+public interface ReportRepository extends CrudRepository<Report, Long> {
+    List<Report> findAll();
 }
