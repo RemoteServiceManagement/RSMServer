@@ -30,50 +30,10 @@
             <div th:replace="diagnosis/sidebar::sidebar(reportId=${report.id})"></div>
         </div>
         <div class="col-sm">
-            <h3>Informacje o pobranych danych</h3>
-            <form th:object="${basicLogDevice}" method="post" th:action="@{'/master/diagnosis/' + ${report.id} + '/device/data/update'}">
-                <div>
-                    <div class="form-inline">
-                        <label class="margin-right" for="date-start">Dane od: </label>
-                        <input class="form-control margin-right" id="date-start" required type="date" th:field="*{chosenDateFrom}"/>
+            <div th:replace="diagnosis/log-device-info::device-info(basicLogDevice=${basicLogDevice},
+             updateUrl=${'/master/diagnosis/' + report.id + '/device/data/update'})"></div>
 
-                        <label class="margin-right" for="date-end">Dane do: </label>
-                        <input class="form-control margin-right" required id="date-end" type="date" th:field="*{chosenDateTo}"/>
-                    </div>
-                    <div>
-                        <div th:each="prop, iter : *{definitionNames}" class="form-check d-inline-block props">
-                            <input type="checkbox" class="form-check-input"
-                                   th:field="*{definitionNames[__${iter.index}__].chosen}"
-                                   th:checked="*{definitionNames[__${iter.index}__].chosen}"
-                                   th:id="${'prop' + iter.index}"/>
-                            <label class="form-check-label" th:for="${'prop' + iter.index}"
-                                   th:text="*{definitionNames[__${iter.index}__].name}"></label>
-                            <input type="hidden" th:field="*{definitionNames[__${iter.index}__].code}"/>
-                            <input type="hidden" th:field="*{definitionNames[__${iter.index}__].name}"/>
-                        </div>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block ">
-                    Aktualizuj dane
-                </button>
-            </form>
-                <script type="text/javascript" th:inline="javascript">
-                    /*<![CDATA[*/
-                    var dateFrom = /*[[${basicLogDevice.availableDataFrom.getTime()}]]*/;
-                    var dateTo = /*[[${basicLogDevice.availableDataTo.getTime()}]]*/;
 
-                    $('#date-start').attr('min', moment(dateFrom).format('YYYY-MM-DD'));
-                    $('#date-start').attr('max', moment(dateTo).format('YYYY-MM-DD'));
-
-                    $('#date-end').attr('max', moment(dateTo).format('YYYY-MM-DD'));
-                    $('#date-end').attr('min', moment(dateFrom).format('YYYY-MM-DD'));
-
-                    $('#date-start').on('change', function (e) {
-                        var startDate = $(this).val();
-                        $('#date-end').attr('min', startDate);
-                    });
-                    /*]]>*/
-                </script>
         </div>
     </div>
 </div>

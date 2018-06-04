@@ -1,4 +1,4 @@
-package com.rsm.property;
+package com.rsm.device.property;
 
 import com.rsm.common.BaseEntity;
 import com.rsm.report.Report;

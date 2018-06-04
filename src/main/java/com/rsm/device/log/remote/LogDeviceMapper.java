@@ -2,7 +2,7 @@ package com.rsm.device.log.remote;
 
 import com.rsm.device.log.LogDto;
 import com.rsm.device.property.PropertyDto;
-import com.rsm.property.ValueType;
+import com.rsm.device.property.ValueType;
 import com.service.remote.grpc.Log;
 import com.service.remote.grpc.Property;
 

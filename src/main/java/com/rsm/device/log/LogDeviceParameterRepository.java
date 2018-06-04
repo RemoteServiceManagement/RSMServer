@@ -5,12 +5,12 @@ import com.rsm.elesticsearch.ESFacade;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Dawid on 03.05.2018 at 20:48.
  */
-@Repository
+@Service
 @RequiredArgsConstructor
 public class LogDeviceParameterRepository {
     public static final String INDEX = "device";
@@ -30,5 +30,9 @@ public class LogDeviceParameterRepository {
         } catch (Exception e) {
             throw new RuntimeException();
         }
+    }
+
+    public DeviceLogDto getDeviceLog(String reportId) {
+        return esFacade.get(INDEX, TYPE, reportId, DeviceLogDto.class);
     }
 }

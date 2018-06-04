@@ -4,7 +4,7 @@ import com.rsm.device.DeviceLogDto;
 import com.rsm.device.log.LogDeviceParameterRepository;
 import com.rsm.device.log.remote.connection.RemoteServiceCredential;
 import com.rsm.device.log.remote.connection.RemoteServiceFactory;
-import com.rsm.property.BasicPropertyDefinition;
+import com.rsm.device.property.BasicPropertyDefinition;
 import com.service.remote.grpc.DateRange;
 import com.service.remote.grpc.DeviceBasicQuery;
 import com.service.remote.grpc.Log;

@@ -1,6 +1,5 @@
 package com.rsm.device.property;
 
-import com.rsm.property.BasicPropertyDefinition;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 

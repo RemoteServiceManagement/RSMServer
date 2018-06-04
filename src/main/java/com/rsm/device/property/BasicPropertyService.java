@@ -1,6 +1,5 @@
 package com.rsm.device.property;
 
-import com.rsm.property.BasicPropertyDefinition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

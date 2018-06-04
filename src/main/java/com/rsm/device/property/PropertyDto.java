@@ -1,6 +1,5 @@
 package com.rsm.device.property;
 
-import com.rsm.property.ValueType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +22,16 @@ public class PropertyDto implements Serializable {
     private Long longValue;
     private Double doubleValue;
     private ValueType valueType;
+
+    public Serializable getValue() {
+        switch (valueType) {
+            case LONG:
+                return longValue;
+            case DOUBLE:
+                return doubleValue;
+            case STRING:
+                return stringValue;
+        }
+        return null;
+    }
 }

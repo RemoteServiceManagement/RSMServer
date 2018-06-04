@@ -2,9 +2,9 @@ package com.rsm.device;
 
 import com.rsm.device.log.LogDeviceInfo;
 import com.rsm.device.log.remote.RemoteDeviceLogService;
+import com.rsm.device.property.BasicPropertyDefinition;
 import com.rsm.device.property.BasicPropertyService;
-import com.rsm.property.BasicPropertyDefinition;
-import com.rsm.property.PropertyDefinitionNameDto;
+import com.rsm.device.property.PropertyDefinitionName;
 import com.rsm.report.Report;
 import com.rsm.report.ReportDoesNotExistException;
 import com.rsm.report.ReportRepository;
@@ -62,21 +62,21 @@ public class DeviceLogDataService {
         return ofNullable(date).map(Date::from).orElse(null);
     }
 
-    private List<PropertyDefinitionNameDto> mergeRemote(List<PropertyDefinitionNameDto> definitionNames, Report report) {
+    private List<PropertyDefinitionName> mergeRemote(List<PropertyDefinitionName> definitionNames, Report report) {
         List<BasicPropertyDefinition> devicePropertiesDefinition = remoteDeviceLogService
                 .getDevicePropertiesDefinition(report.getReportedDeviceServiceCredential(),
                         report.getReportedDeviceExternalId());
-        List<PropertyDefinitionNameDto> remoteProperty = devicePropertiesDefinition.stream()
+        List<PropertyDefinitionName> remoteProperty = devicePropertiesDefinition.stream()
                 .map(this::toNotChosenProperty).collect(toList());
 
-        HashSet<PropertyDefinitionNameDto> merged = new HashSet<>();
+        HashSet<PropertyDefinitionName> merged = new HashSet<>();
         merged.addAll(definitionNames);
         merged.addAll(remoteProperty);
         return new ArrayList<>(merged);
     }
 
-    private PropertyDefinitionNameDto toNotChosenProperty(BasicPropertyDefinition definition) {
-        return new PropertyDefinitionNameDto(definition.getName(), definition.getCode(), false);
+    private PropertyDefinitionName toNotChosenProperty(BasicPropertyDefinition definition) {
+        return new PropertyDefinitionName(definition.getName(), definition.getCode(), false);
     }
 
 
@@ -85,8 +85,8 @@ public class DeviceLogDataService {
                 report.getReportedDeviceExternalId());
     }
 
-    private PropertyDefinitionNameDto toChosenProperty(BasicPropertyDefinition definition) {
-        return new PropertyDefinitionNameDto(definition.getName(), definition.getCode(), true);
+    private PropertyDefinitionName toChosenProperty(BasicPropertyDefinition definition) {
+        return new PropertyDefinitionName(definition.getName(), definition.getCode(), true);
     }
 
     public void updateData(LogDeviceInfo logDeviceInfo, Long reportId) {
@@ -108,16 +108,16 @@ public class DeviceLogDataService {
                 report.getReportedDeviceExternalId(), interval, chosenProperty, reportId);
     }
 
-    private List<BasicPropertyDefinition> toChosenProperty(List<PropertyDefinitionNameDto> definitionNames, Report report) {
+    private List<BasicPropertyDefinition> toChosenProperty(List<PropertyDefinitionName> definitionNames, Report report) {
         return definitionNames
                 .stream()
-                .filter(PropertyDefinitionNameDto::isChosen)
+                .filter(PropertyDefinitionName::isChosen)
                 .map(this::toBasicProperty)
                 .peek(property -> property.setReport(report))
                 .collect(toList());
     }
 
-    private BasicPropertyDefinition toBasicProperty(PropertyDefinitionNameDto property) {
+    private BasicPropertyDefinition toBasicProperty(PropertyDefinitionName property) {
         return new BasicPropertyDefinition(property.getName(), property.getCode());
     }
 }
