@@ -27,7 +27,7 @@
 <div class="container diagnosis">
     <div class="row">
         <div class="col-sm-3">
-            <div th:replace="diagnosis/sidebar::sidebar"></div>
+            <div th:replace="diagnosis/sidebar::sidebar(reportId=${report.id})"></div>
         </div>
         <div class="col-sm">
             <h3>Informacje o pobranych danych</h3>

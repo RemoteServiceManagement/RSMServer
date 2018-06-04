@@ -21,12 +21,12 @@
     <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
 </head>
 <body>
-<div class="sidebar" th:fragment="sidebar">
+<div class="sidebar" th:fragment="sidebar(reportId)">
     <div class="list-group">
-        <a th:href="@{'/master/diagnosis/'+${report.id} + '/details'}" class="list-group-item text-secondary">
+        <a th:href="@{'/master/diagnosis/'+${reportId} + '/details'}" class="list-group-item text-secondary">
             Szczegóły
         </a>
-        <a th:href="@{'/master/diagnosis/'+${report.id} + '/device/data'}" class="list-group-item text-secondary">
+        <a th:href="@{'/master/diagnosis/'+${reportId} + '/device/data'}" class="list-group-item text-secondary">
             Dane
         </a>
         <a class="list-group-item text-secondary">
