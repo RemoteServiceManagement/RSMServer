@@ -1,6 +1,7 @@
 package com.rsm.controller;
 
 import com.rsm.device.DeviceLogDataService;
+import com.rsm.device.log.DeviceLogTableService;
 import com.rsm.device.log.LogDeviceInfo;
 import com.rsm.report.Report;
 import com.rsm.report.ReportDoesNotExistException;
@@ -22,8 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RequestMapping("/master/diagnosis/")
 public class DiagnosisController {
+    private static final int PAGE_SIZE = 100;
     private final ReportService reportService;
     private final DeviceLogDataService deviceLogDataService;
+    private final DeviceLogTableService logTableService;
 
     @GetMapping("{reportId}/details")
     public String getReportDetails(@PathVariable Long reportId, Model model) {
@@ -39,6 +42,7 @@ public class DiagnosisController {
     public String getDeviceData(@PathVariable Long reportId, Model model) {
         model.addAttribute("report", gerReport(reportId));
         model.addAttribute("basicLogDevice", deviceLogDataService.getLogDeviceInfo(reportId));
+        model.addAttribute("deviceLog", logTableService.getDeviceLog(reportId, PAGE_SIZE, 0));
         return "diagnosis/diagnosis-data";
     }
 

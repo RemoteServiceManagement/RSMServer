@@ -19,12 +19,18 @@ import javax.persistence.ManyToOne;
 public class BasicPropertyDefinition extends BaseEntity {
     private String name;
     private String code;
+    private String unit;
 
     @ManyToOne
     private Report report;
 
-    public BasicPropertyDefinition(String name, String code) {
+    public BasicPropertyDefinition(String name, String code, String unit) {
         this.name = name;
         this.code = code;
+        this.unit = unit;
+    }
+
+    public BasicPropertyDefinitionNameDto toPropertyDefinitionName() {
+        return new BasicPropertyDefinitionNameDto(name, code, unit);
     }
 }

@@ -3,6 +3,7 @@ package com.rsm.device;
 import com.rsm.device.log.LogDeviceInfo;
 import com.rsm.device.log.remote.RemoteDeviceLogService;
 import com.rsm.device.property.BasicPropertyDefinition;
+import com.rsm.device.property.BasicPropertyDefinitionNameDto;
 import com.rsm.device.property.BasicPropertyService;
 import com.rsm.device.property.PropertyDefinitionName;
 import com.rsm.report.Report;
@@ -18,6 +19,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Date.from;
 import static java.util.Optional.ofNullable;
@@ -76,7 +78,7 @@ public class DeviceLogDataService {
     }
 
     private PropertyDefinitionName toNotChosenProperty(BasicPropertyDefinition definition) {
-        return new PropertyDefinitionName(definition.getName(), definition.getCode(), false);
+        return new PropertyDefinitionName(definition.getName(), definition.getCode(), definition.getUnit(), false);
     }
 
 
@@ -86,7 +88,7 @@ public class DeviceLogDataService {
     }
 
     private PropertyDefinitionName toChosenProperty(BasicPropertyDefinition definition) {
-        return new PropertyDefinitionName(definition.getName(), definition.getCode(), true);
+        return new PropertyDefinitionName(definition.getName(), definition.getCode(), definition.getUnit(), true);
     }
 
     public void updateData(LogDeviceInfo logDeviceInfo, Long reportId) {
@@ -118,6 +120,14 @@ public class DeviceLogDataService {
     }
 
     private BasicPropertyDefinition toBasicProperty(PropertyDefinitionName property) {
-        return new BasicPropertyDefinition(property.getName(), property.getCode());
+        return new BasicPropertyDefinition(property.getName(), property.getCode(), property.getUnit());
+    }
+
+    public List<BasicPropertyDefinitionNameDto> getDownloadedLogInfo(Long reportId) {
+        return ofNullable(getReport(reportId).getChosenProperty()
+                .stream()
+                .map(BasicPropertyDefinition::toPropertyDefinitionName)
+                .collect(Collectors.toList()))
+                .orElse(new ArrayList<>());
     }
 }

@@ -14,7 +14,7 @@ public class PropertiesPageImpl<V, H> implements PropertiesPage<V, H> {
     private final int number;
     private final int pageSize;
     private final List<V> content;
-    private final H header;
+    private final List<H> header;
 
 
     @Override
@@ -43,12 +43,12 @@ public class PropertiesPageImpl<V, H> implements PropertiesPage<V, H> {
     }
 
     @Override
-    public List<V> content() {
+    public List<V> getContent() {
         return content;
     }
 
     @Override
-    public H header() {
+    public List<H> getHeader() {
         return header;
     }
 }

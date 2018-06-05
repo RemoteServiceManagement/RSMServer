@@ -32,16 +32,16 @@ public class DeviceLogTableService {
     private final LogDeviceParameterRepository repository;
     private final DeviceLogDataService dataService;
 
-    public PropertiesPage<Map<String, Serializable>, List<BasicPropertyDefinitionNameDto>> getDeviceLog(Long reportId, int pageSize, int pageNumber) {
+    public PropertiesPage<Map<String, Serializable>, BasicPropertyDefinitionNameDto> getDeviceLog(Long reportId, int pageSize, int pageNumber) {
         DeviceLogDto deviceLog = repository.getDeviceLog(reportId.toString());
         return getLogs(deviceLog.getLogs(), pageNumber, pageSize)
                 .map(pageInfo -> toPage(pageInfo, pageNumber, pageSize, reportId))
                 .orElse(new PropertiesPageImpl<>(0, 0, 0, newArrayList(), newArrayList()));
     }
 
-    private PropertiesPage<Map<String, Serializable>, List<BasicPropertyDefinitionNameDto>>
+    private PropertiesPage<Map<String, Serializable>, BasicPropertyDefinitionNameDto>
     toPage(PageInfo<List<LogDto>> pageInfo, int pageNumber, int pageSize, Long reportId) {
-        List<BasicPropertyDefinitionNameDto> definitionNamesDto = dataService.getLogDeviceInfo(reportId).getDefinitionNamesDto();
+        List<BasicPropertyDefinitionNameDto> definitionNamesDto = dataService.getDownloadedLogInfo(reportId);
         List<Map<String, Serializable>> logMaps = pageInfo.getContent().stream().map(this::toMap).collect(toList());
         return new PropertiesPageImpl<>(pageInfo.getTotalPage(), pageNumber, pageSize, logMaps, definitionNamesDto);
     }

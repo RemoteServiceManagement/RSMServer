@@ -97,7 +97,7 @@ public class RemoteDeviceLogService {
         channel.shutdown();
         return ofNullable(propertyDefinitionBundle.getPropertyDefinitionList())
                 .map(that -> that.stream()
-                        .map(property -> new BasicPropertyDefinition(property.getName(), property.getCode()))
+                        .map(property -> new BasicPropertyDefinition(property.getName(), property.getCode(), property.getUnit()))
                         .collect(Collectors.toList()))
                 .orElse(new ArrayList<>());
 

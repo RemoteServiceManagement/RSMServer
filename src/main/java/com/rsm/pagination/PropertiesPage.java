@@ -17,7 +17,7 @@ public interface PropertiesPage<V, H> {
 
     int previousPageNumber();
 
-    List<V> content();
+    List<V> getContent();
 
-    H header();
+    List<H> getHeader();
 }

@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class PropertyDefinitionName extends BasicPropertyDefinitionNameDto {
     private boolean isChosen;
 
-    public PropertyDefinitionName(String name, String code, boolean isChosen) {
-        super(name, code);
+    public PropertyDefinitionName(String name, String code, String unit, boolean isChosen) {
+        super(name, code, unit);
         this.isChosen = isChosen;
     }
 }

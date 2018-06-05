@@ -30,6 +30,7 @@ message PropertyDefinitionBundle {
 message PropertyDefinition {
     string name = 1;
     string code = 2;
+    string unit = 3;
 }
 
 message DateRange {
