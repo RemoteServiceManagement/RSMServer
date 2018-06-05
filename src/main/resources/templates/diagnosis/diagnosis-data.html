@@ -37,7 +37,8 @@
             <table class="table table-hover" th:object="${deviceLog}">
                 <thead>
                 <tr>
-                    <th th:each="header : ${deviceLog.header}" th:text="${header.name + ' [' + header.unit + ']'}"
+                    <th th:each="header : ${deviceLog.header}"
+                        th:text="${header.name + (header.unit != null ? ' [' + header.unit + ']' : '')}"
                         scope="col"></th>
                 </tr>
                 </thead>

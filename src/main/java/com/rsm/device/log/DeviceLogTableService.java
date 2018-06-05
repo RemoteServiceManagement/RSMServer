@@ -12,7 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,8 +33,11 @@ import static java.util.stream.Collectors.toList;
 @Service
 @RequiredArgsConstructor
 public class DeviceLogTableService {
+    public static final String DATE_NAME = "Data";
+    public static final String DATE_CODE = "DATE";
     private final LogDeviceParameterRepository repository;
     private final DeviceLogDataService dataService;
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.getDefault()).withZone(ZoneOffset.UTC);
 
     public PropertiesPage<Map<String, Serializable>, BasicPropertyDefinitionNameDto> getDeviceLog(Long reportId, int pageSize, int pageNumber) {
         DeviceLogDto deviceLog = repository.getDeviceLog(reportId.toString());
@@ -42,14 +49,26 @@ public class DeviceLogTableService {
     private PropertiesPage<Map<String, Serializable>, BasicPropertyDefinitionNameDto>
     toPage(PageInfo<List<LogDto>> pageInfo, int pageNumber, int pageSize, Long reportId) {
         List<BasicPropertyDefinitionNameDto> definitionNamesDto = dataService.getDownloadedLogInfo(reportId);
-        List<Map<String, Serializable>> logMaps = pageInfo.getContent().stream().map(this::toMap).collect(toList());
+        addDateHeader(definitionNamesDto);
+        List<Map<String, Serializable>> logMaps = pageInfo.getContent()
+                .stream()
+                .map(this::toMap)
+                .collect(toList());
         return new PropertiesPageImpl<>(pageInfo.getTotalPage(), pageNumber, pageSize, logMaps, definitionNamesDto);
     }
 
+    private void addDateHeader(List<BasicPropertyDefinitionNameDto> definitionNamesDto) {
+        if (!definitionNamesDto.isEmpty()) {
+            definitionNamesDto.add(0, new BasicPropertyDefinitionNameDto(DATE_NAME, DATE_CODE, null));
+        }
+    }
+
     private Map<String, Serializable> toMap(LogDto logDto) {
-        return logDto.getProperties()
+        Map<String, Serializable> logs = logDto.getProperties()
                 .stream()
                 .collect(Collectors.toMap(PropertyDto::getCode, PropertyDto::getValue));
+        logs.put(DATE_CODE, dateTimeFormatter.format(logDto.getDateTime()));
+        return logs;
     }
 
     private Optional<PageInfo<List<LogDto>>> getLogs(List<LogDto> logs, int pageNumber, int pageSize) {
