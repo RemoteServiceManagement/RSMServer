@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -41,6 +42,11 @@ public class DeviceLogTableService {
 
     public PropertiesPage<Map<String, Serializable>, BasicPropertyDefinitionNameDto> getDeviceLog(Long reportId, int pageSize, int pageNumber) {
         DeviceLogDto deviceLog = repository.getDeviceLog(reportId.toString());
+
+        if (deviceLog == null) {
+            return new PropertiesPageImpl<>(0, 0, 0, new ArrayList<>(), new ArrayList<>());
+        }
+
         return getLogs(deviceLog.getLogs(), pageNumber, pageSize)
                 .map(pageInfo -> toPage(pageInfo, pageNumber, pageSize, reportId))
                 .orElse(new PropertiesPageImpl<>(0, 0, 0, newArrayList(), newArrayList()));
