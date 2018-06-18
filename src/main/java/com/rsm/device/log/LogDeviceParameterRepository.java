@@ -33,6 +33,7 @@ public class LogDeviceParameterRepository {
     }
 
     public DeviceLogDto getDeviceLog(String reportId) {
+        esFacade.putIfMappingDoesNotExist(INDEX, TYPE, getMapping());
         return esFacade.get(INDEX, TYPE, reportId, DeviceLogDto.class);
     }
 }

@@ -18,12 +18,12 @@ public class PropertiesPageImpl<V, H> implements PropertiesPage<V, H> {
 
 
     @Override
-    public int totalPages() {
+    public int getTotalPages() {
         return totalPages;
     }
 
     @Override
-    public int number() {
+    public int getNumber() {
         return number;
     }
 

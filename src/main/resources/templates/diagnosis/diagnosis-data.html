@@ -44,11 +44,11 @@
                 </thead>
                 <tbody>
                 <tr th:each="content : ${deviceLog.content}">
-                    <!--<th scope="row">1</th>-->
                     <td th:each="header : ${deviceLog.header}" th:text="${content.get(header.code)}"></td>
                 </tr>
                 </tbody>
             </table>
+            <div th:replace="diagnosis/pagination::pagination(page=${deviceLog})"></div>
 
 
         </div>

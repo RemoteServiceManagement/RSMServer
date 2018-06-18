@@ -9,6 +9,7 @@ import com.rsm.report.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,10 +40,15 @@ public class DiagnosisController {
     }
 
     @GetMapping("{reportId}/device/data")
-    public String getDeviceData(@PathVariable Long reportId, Model model) {
+    public String showCar(@PathVariable Long reportId) {
+        return "redirect:/master/diagnosis/" + reportId + "/device/data/1";
+    }
+
+    @GetMapping("{reportId}/device/data/{pageNumber}")
+    public String showPage(@PathVariable Integer pageNumber, @PathVariable Long reportId, ModelMap model) {
         model.addAttribute("report", gerReport(reportId));
         model.addAttribute("basicLogDevice", deviceLogDataService.getLogDeviceInfo(reportId));
-        model.addAttribute("deviceLog", logTableService.getDeviceLog(reportId, PAGE_SIZE, 0));
+        model.addAttribute("deviceLog", logTableService.getDeviceLog(reportId, PAGE_SIZE, pageNumber - 1));
         return "diagnosis/diagnosis-data";
     }
 
