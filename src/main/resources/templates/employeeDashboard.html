@@ -75,18 +75,18 @@
                 </div>
                 <div class="card text-center bg-success text-white mb-5">
                     <div class="card-body">
-                        <h3>Kategorie</h3>
+                        <h3>Klienci</h3>
                         <h1 class="display-4">
-                            <i class="fa fa-folder-open-o"></i> 5
+                            <i class="fa fa-folder-open-o"></i>  <span th:text="${clientCounter}"></span>
                         </h1>
-                        <a href="#" class="btn btn-outline-light btn-sm">Zobacz</a>
+                        <a href="/allClients" class="btn btn-outline-light btn-sm">Zobacz</a>
                     </div>
                 </div>
                 <div class="card text-center bg-warning text-white mb-5">
                     <div class="card-body">
-                        <h3>Klienci</h3>
+                        <h3>Serwisanci</h3>
                         <h1 class="display-4">
-                            <i class="fa fa-users"></i> 3
+                            <i class="fa fa-users"></i>  <span th:text="${employeeCounter}"></span>
                         </h1>
                         <a href="#" class="btn btn-outline-light btn-sm">Zobacz</a>
                     </div>
