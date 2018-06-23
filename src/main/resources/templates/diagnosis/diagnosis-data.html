@@ -31,7 +31,7 @@
         </div>
         <div class="col-sm">
             <div th:replace="diagnosis/log-device-info::device-info(basicLogDevice=${basicLogDevice},
-             updateUrl=${'/master/diagnosis/' + report.id + '/device/data/update'})"></div>
+             updateUrl=${'/diagnosis/' + report.id + '/device/data/update'})"></div>
 
 
             <table class="table table-hover" th:object="${deviceLog}">

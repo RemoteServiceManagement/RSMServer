@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/master/diagnosis/")
+@RequestMapping("/diagnosis/")
 public class DiagnosisController {
     private static final int PAGE_SIZE = 100;
     private final ReportService reportService;
@@ -41,7 +41,7 @@ public class DiagnosisController {
 
     @GetMapping("{reportId}/device/data")
     public String showCar(@PathVariable Long reportId) {
-        return "redirect:/master/diagnosis/" + reportId + "/device/data/1";
+        return "redirect:/diagnosis/" + reportId + "/device/data/1";
     }
 
     @GetMapping("{reportId}/device/data/{pageNumber}")
@@ -55,6 +55,6 @@ public class DiagnosisController {
     @PostMapping("{reportId}/device/data/update")
     public String updateDeviceLogs(@ModelAttribute LogDeviceInfo logDeviceInfo, @PathVariable Long reportId) {
         deviceLogDataService.updateData(logDeviceInfo, reportId);
-        return  "redirect:/master/diagnosis/" + reportId + "/device/data";
+        return  "redirect:/diagnosis/" + reportId + "/device/data";
     }
 }

@@ -6,8 +6,12 @@ import com.rsm.employee.Employee;
 import com.rsm.employee.EmployeeService;
 import com.rsm.report.Report;
 import com.rsm.report.ReportService;
+import com.rsm.role.RoleService;
+import com.rsm.user.User;
 import com.rsm.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +33,23 @@ public class DashboardController {
     private final EmployeeService employeeService;
     private final CustomerService customerService;
     private final ReportService reportService;
+    private final RoleService roleService;
+
+    @GetMapping("")
+    public String dashboard(Principal principal){
+        Optional<User> optionalUser = userService.findByUsername(principal.getName());
+        if(optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if(user.getRoles().contains(roleService.findRoleByRoleName("MASTER").orElse(null))) {
+                return "redirect:/dashboard/masterDashboard/";
+            } else if(user.getRoles().contains(roleService.findRoleByRoleName("EMPLOYEE").orElse(null))) {
+                return "redirect:/dashboard/employeeDashboard/";
+            } else if (user.getRoles().contains(roleService.findRoleByRoleName("CUSTOMER").orElse(null))) {
+                return "redirect:/dashboard/customerDashboard/";
+            }
+        }
+        return "home";
+    }
 
     @GetMapping("/employeeDashboard")
     public String employeeDashboard(Model model, Principal principal) {
@@ -82,11 +103,21 @@ public class DashboardController {
     }
 
     @GetMapping("/masterDashboard")
-    public String masterDashboard(Model model, Principal principal) {
+    public String masterDashboard(Model model) {
         List<Report> reports = reportService.findUnassigned();
+        int allReportsSize = reportService.findAll().size();
         model.addAttribute("reports", reports);
-        model.addAttribute("reportCounter", reports.size());
+        model.addAttribute("reportCounter", allReportsSize);
         return "masterDashboard";
+    }
+
+    @GetMapping("/masterDashboard/allReports")
+    public String masterDashboardAllReports(Model model) {
+        List<Report> reports = reportService.findAll();
+        int unnasignedReportsSize = reportService.findUnassigned().size();
+        model.addAttribute("reports", reports);
+        model.addAttribute("reportCounter", unnasignedReportsSize);
+        return "allReportsMaster";
     }
 
 }

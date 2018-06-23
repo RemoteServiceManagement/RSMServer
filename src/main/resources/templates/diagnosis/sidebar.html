@@ -23,10 +23,10 @@
 <body>
 <div class="sidebar" th:fragment="sidebar(reportId)">
     <div class="list-group">
-        <a th:href="@{'/master/diagnosis/'+${reportId} + '/details'}" class="list-group-item text-secondary">
+        <a th:href="@{'/diagnosis/'+${reportId} + '/details'}" class="list-group-item text-secondary">
             Szczegóły
         </a>
-        <a th:href="@{'/master/diagnosis/'+${reportId} + '/device/data'}" class="list-group-item text-secondary">
+        <a th:href="@{'/diagnosis/'+${reportId} + '/device/data'}" class="list-group-item text-secondary">
             Dane
         </a>
         <a class="list-group-item text-secondary">

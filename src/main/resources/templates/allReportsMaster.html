@@ -7,28 +7,49 @@
     <meta http-equiv="X-UA-Compatible"
           content="ie=edge" />
     <title>Serwisowanie Online</title>
+    <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace( 'editor1' );
+        function changeModalContent() {
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("addReportBody").innerHTML = this.response;
+
+                }
+            };
+            xhttp.open("GET", "http://localhost:8080/reports/reportForm", true);
+            xhttp.send();
+        }
+    </script>
 </head>
 <div th:replace="fragments/header::header">
 </div>
 <body>
 <header class="main-header py-2 bg-primary text-white mb-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h1><i class="fa fa-gear"></i> Panel Serwisanta</h1>
-                </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1><i class="fa fa-gear"></i> Panel Dyspozytora</h1>
             </div>
         </div>
+    </div>
 </header>
+
 <section id="reports">
     <div class="container">
         <div class="row">
             <div class="col-md-9">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Bieżące zgłoszenia</h4>
+                        <h4>Wszystkie zgłoszenia:</h4>
                     </div>
                     <table class="table table-striped">
                         <thead class="thead-inverse">
@@ -36,9 +57,10 @@
                             <th>#</th>
                             <th>Tytuł</th>
                             <th>Urządzenie</th>
-                            <th>Opis</th>
                             <th>Data</th>
                             <th>Status</th>
+                            <th>Pracownik</th>
+                            <th>Akcja</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -48,12 +70,12 @@
                             <td th:text="${report.title}"></td>
                             <td th:if="${report.device!=null}" th:text="${report.device.brand + ' ' + report.device.model}"></td>
                             <td th:if="${report.device == null}" th:text="${'brak danych'}"></td>
-                            <td th:text="${report.description}"></td>
                             <td th:text="${report.reportDate}"></td>
                             <td th:text="${report.reportStatus.reportStatusName}"></td>
-                            <td><a th:href="@{'/dashboard/employeeDashboard/reportDetails/' + ${report.id}}" class="btn btn-secondary">
-                                    <i class="fa fa-angle-double-right"></i> Szczegóły
-                                </a>
+                            <td th:text="${report.employee.username}"></td>
+                            <td><a th:href="@{'/master/assignReport/'+${report.id}}" class="btn btn-secondary action-btn">
+                                <i class="fa fa-angle-double-right"></i> Przypisz
+                            </a>
                                 <a th:href="@{'/diagnosis/'+${report.id} + '/details'}" class="btn btn-primary action-btn">
                                     <i class="fa fa-angle-double-right"></i> Diagnoza
                                 </a>
@@ -66,11 +88,11 @@
             <div class="col-md-3">
                 <div class="card text-center bg-primary text-white mb-5">
                     <div class="card-body">
-                        <h3>Zgłoszenia</h3>
+                        <h3>Nieprzypisane zgłoszenia</h3>
                         <h1 class="display-4">
                             <i class="fa fa-pencil"></i> <span th:text="${reportCounter}"></span>
                         </h1>
-                        <a href="/dashboard/employeeDashboard" class="btn btn-outline-light btn-sm">Zobacz</a>
+                        <a href="/dashboard/masterDashboard/" class="btn btn-outline-light btn-sm">Zobacz</a>
                     </div>
                 </div>
                 <div class="card text-center bg-success text-white mb-5">
@@ -84,7 +106,7 @@
                 </div>
                 <div class="card text-center bg-warning text-white mb-5">
                     <div class="card-body">
-                        <h3>Klienci</h3>
+                        <h3>Serwisanci</h3>
                         <h1 class="display-4">
                             <i class="fa fa-users"></i> 3
                         </h1>
@@ -95,10 +117,21 @@
         </div>
     </div>
 </section>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-</body>
-<div th:replace="fragments/footer::footer">
+<div class="modal fade" id="addReportModal" th:id="addReportModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Zgłoś usterkę</h5>
+                <button class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div id="addReportBody" class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
 </div>
+</body>
 </html>

@@ -76,7 +76,7 @@
                             <td><a th:href="@{'/master/assignReport/'+${report.id}}" class="btn btn-secondary action-btn">
                                 <i class="fa fa-angle-double-right"></i> Przypisz
                             </a>
-                                <a th:href="@{'/master/diagnosis/'+${report.id} + '/details'}" class="btn btn-primary action-btn">
+                                <a th:href="@{'/diagnosis/'+${report.id} + '/details'}" class="btn btn-primary action-btn">
                                     <i class="fa fa-angle-double-right"></i> Diagnoza
                                 </a>
                             </td>
@@ -88,11 +88,11 @@
             <div class="col-md-3">
                 <div class="card text-center bg-primary text-white mb-5">
                     <div class="card-body">
-                        <h3>Zgłoszenia</h3>
+                        <h3>Wszystkie zgłoszenia</h3>
                         <h1 class="display-4">
                             <i class="fa fa-pencil"></i> <span th:text="${reportCounter}"></span>
                         </h1>
-                        <a href="#" class="btn btn-outline-light btn-sm">Zobacz</a>
+                        <a href="/dashboard/masterDashboard/allReports" class="btn btn-outline-light btn-sm">Zobacz</a>
                     </div>
                 </div>
                 <div class="card text-center bg-success text-white mb-5">

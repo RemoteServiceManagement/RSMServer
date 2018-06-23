@@ -26,8 +26,6 @@ public class ReportController {
     private final ReportService reportService;
     private static final String UPLOADED_FOLDER="src/main/resources/static/images/uploads/";
 
-
-
     @GetMapping("/reportForm")
     public String reportForm(Model model){
         Report report=new Report();
