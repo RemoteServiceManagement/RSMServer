@@ -62,7 +62,11 @@ public class Report extends BaseEntity {
     @JoinColumn(name="CUSTOMER_ID")
     private Customer customer;
 
+    @Column(name="DIAGNOSIS")
     private String diagnosis;
+
+    @Column(name="PRICING")
+    private Float pricing;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "report")
     private List<BasicPropertyDefinition> chosenProperty;

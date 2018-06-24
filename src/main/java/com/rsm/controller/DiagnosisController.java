@@ -77,14 +77,11 @@ public class DiagnosisController {
                                         @ModelAttribute("reportId") Long reportId) {
         Optional<Report> savedReportOptional = reportService.findById(reportId);
         if(savedReportOptional.isPresent()) {
-            report.setTitle(savedReportOptional.get().getTitle());
-            report.setDescription(savedReportOptional.get().getDescription());
-            report.setReportDate(savedReportOptional.get().getReportDate());
-            report.setReportPhoto(savedReportOptional.get().getReportPhoto());
-            report.setDevice(savedReportOptional.get().getDevice());
-            report.setCustomer(savedReportOptional.get().getCustomer());
-            report.setEmployee(savedReportOptional.get().getEmployee());
-            reportService.save(report);
+            Report savedReport = savedReportOptional.get();
+            savedReport.setReportStatus(report.getReportStatus());
+            savedReport.setPricing(report.getPricing());
+            savedReport.setDiagnosis(report.getDiagnosis());
+            reportService.save(savedReport);
         }
         return "redirect:/diagnosis/{reportId}/details";
     }
