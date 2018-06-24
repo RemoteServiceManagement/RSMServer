@@ -1,7 +1,10 @@
 package com.rsm.customer;
 
+import com.rsm.device.Device;
 import com.rsm.role.RoleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,7 @@ public class CustomerServiceImpl implements CustomerService{
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final Optional<Authentication> authentication;
 
     @Override
     public List<Customer> findAll() {
@@ -51,4 +55,15 @@ public class CustomerServiceImpl implements CustomerService{
         customerRepository.deleteById(id);
     }
 
+    @Override
+    public List<Device> findCustomersDevices(Long customerId) {
+        return customerRepository.findById(customerId)
+                .map(customer -> customer.getDevices()).orElseThrow((() -> new CustomerDoesNotExistException()));
+    }
+
+    @Override
+    public Optional<Customer> getCurrent() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return customerRepository.findByUsername(authentication.getName());
+    }
 }

@@ -1,6 +1,7 @@
 package com.rsm.device;
 
 import com.rsm.common.BaseEntity;
+import com.rsm.customer.Customer;
 import com.rsm.device.log.remote.connection.RemoteServiceCredential;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,9 @@ public class Device extends BaseEntity {
     private String description;
     @Column(name="EXTERNAL_ID")
     private String externalId;
+
+    @ManyToOne
+    private Customer customer;
 
     @ManyToOne
     private RemoteServiceCredential remoteServiceCredential;
