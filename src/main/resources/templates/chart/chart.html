@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible"
+          content="ie=edge"/>
+    <title>Serwisowanie Online</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+          integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+            integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
+</head>
+<body>
+<div th:fragment="chart(chartData)">
+    <th:block th:if="${chartData != null}">
+        <style>
+            #chartdiv {
+                width: 100%;
+                height: 500px;
+            }
+        </style>
+
+        <!-- Resources -->
+        <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+        <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+        <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+        <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css"
+              media="all"/>
+        <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+
+        <!-- Chart code -->
+        <script type="text/javascript" th:inline="javascript">
+            /*<![CDATA[*/
+            var chartData = generateChartData();
+            var chart = AmCharts.makeChart("chartdiv", {
+                "titles": [
+                    {
+                        "text": [[${chartData.chartName}]],
+                        "size": 15
+                    }
+                ],
+                "type": "serial",
+                "theme": "light",
+                "marginRight": 80,
+                "autoMarginOffset": 20,
+                "marginTop": 7,
+                "dataProvider": chartData,
+                "valueAxes": [{
+                    "axisAlpha": 0.2,
+                    "dashLength": 1,
+                    "position": "left",
+                    "title": [[${chartData.unit}]],
+                    "titleFontSize": 15
+                }],
+                "mouseWheelZoomEnabled": true,
+                "graphs": [{
+                    "id": "g1",
+                    "bullet": "round",
+                    "bulletBorderAlpha": 1,
+                    "bulletColor": "#FFFFFF",
+                    "hideBulletsCount": 50,
+                    "title": "red line",
+                    "valueField": "visits",
+                    "useLineColorForBulletBorder": true,
+                    "balloon": {
+                        "drop": true
+                    }
+                }],
+                "chartScrollbar": {
+                    "autoGridCount": true,
+                    "graph": "g1",
+                    "scrollbarHeight": 40
+                },
+                "chartCursor": {
+                    "limitToGraph": "g1"
+                },
+                "categoryField": "date",
+                "categoryAxis": {
+                    "parseDates": true,
+                    "minPeriod": "mm",
+                    "axisColor": "#DADADA",
+                    "dashLength": 1,
+                    "minorGridEnabled": true
+                },
+                "export": {
+                    "enabled": true
+                }
+            });
+
+            chart.addListener("rendered", zoomChart);
+            zoomChart();
+
+            function zoomChart() {
+                chart.zoomToIndexes(chartData.length - 40, chartData.length - 1);
+            }
+
+            function generateChartData() {
+                var list = $.parseJSON(/*[[${chartData.jsonData}]]*/);
+
+                var chartData = [];
+                for (var i = 0; i < list.length; i++) {
+                    let listElement = list[i];
+                    var valueData = listElement.propertyValue;
+                    var date = new Date(Number(listElement.date));
+                    chartData.push({
+                        date: date,
+                        visits: valueData
+                    });
+
+                }
+
+                return chartData;
+            }
+
+            /*]]>*/
+        </script>
+
+
+        <div id="chartdiv"></div>
+    </th:block>
+    <th:block th:if="${chartData == null}">
+        <h1>Brak pobranych danych. Wybierz dane w zakładce "Dane".</h1>
+    </th:block>
+</div>
+</body>
+</html>

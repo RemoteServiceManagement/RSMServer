@@ -33,11 +33,11 @@ public class DiagnosisController {
 
     @GetMapping("{reportId}/details")
     public String getReportDetails(@PathVariable Long reportId, Model model) {
-        model.addAttribute("report", gerReport(reportId));
+        model.addAttribute("report", getReport(reportId));
         return "diagnosis/diagnosis-details";
     }
 
-    private Report gerReport(Long reportId) {
+    private Report getReport(Long reportId) {
         return reportService.findById(reportId).orElseThrow(ReportDoesNotExistException::new);
     }
 
@@ -48,7 +48,7 @@ public class DiagnosisController {
 
     @GetMapping("{reportId}/device/data/{pageNumber}")
     public String showPage(@PathVariable Integer pageNumber, @PathVariable Long reportId, ModelMap model) {
-        model.addAttribute("report", gerReport(reportId));
+        model.addAttribute("report", getReport(reportId));
         model.addAttribute("basicLogDevice", deviceLogDataService.getLogDeviceInfo(reportId));
         model.addAttribute("deviceLog", logTableService.getDeviceLog(reportId, PAGE_SIZE, pageNumber - 1));
         return "diagnosis/diagnosis-data";

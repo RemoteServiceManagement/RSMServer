@@ -16,4 +16,12 @@ public class BasicPropertyService {
     public void removeAll(List<BasicPropertyDefinition> definitions) {
         repository.deleteAll(definitions);
     }
+
+    public BasicPropertyDefinition getByReportIdAndCode(Long reportId, String code) {
+        return repository.getByReport_IdAndCode(reportId, code);
+    }
+
+    public List<BasicPropertyDefinition> getByReportId(Long reportId) {
+        return repository.getByReport_Id(reportId);
+    }
 }

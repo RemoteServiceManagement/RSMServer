@@ -17,8 +17,10 @@ public class BasicPropertyDefinitionNameDto {
     private String name;
     private String code;
     private String unit;
+    private boolean numerical;
 
     public static BasicPropertyDefinitionNameDto valueOf(PropertyDefinitionName definitionName) {
-        return new BasicPropertyDefinitionNameDto(definitionName.getName(), definitionName.getCode(), definitionName.getUnit());
+        return new BasicPropertyDefinitionNameDto(definitionName.getName(), definitionName.getCode(),
+                definitionName.getUnit(), definitionName.isNumerical());
     }
 }
