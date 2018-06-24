@@ -51,10 +51,7 @@
                             <td th:text="${report.description}"></td>
                             <td th:text="${report.reportDate}"></td>
                             <td th:text="${report.reportStatus.reportStatusName}"></td>
-                            <td><a th:href="@{'/dashboard/employeeDashboard/reportDetails/' + ${report.id}}" class="btn btn-secondary">
-                                    <i class="fa fa-angle-double-right"></i> Szczegóły
-                                </a>
-                                <a th:href="@{'/diagnosis/'+${report.id} + '/details'}" class="btn btn-primary action-btn">
+                            <td><a th:href="@{'/diagnosis/'+${report.id} + '/details'}" class="btn btn-primary action-btn">
                                     <i class="fa fa-angle-double-right"></i> Diagnoza
                                 </a>
                             </td>
@@ -88,7 +85,7 @@
                         <h1 class="display-4">
                             <i class="fa fa-users"></i>  <span th:text="${employeeCounter}"></span>
                         </h1>
-                        <a href="#" class="btn btn-outline-light btn-sm">Zobacz</a>
+                        <a href="/allEmployees" class="btn btn-outline-light btn-sm">Zobacz</a>
                     </div>
                 </div>
             </div>

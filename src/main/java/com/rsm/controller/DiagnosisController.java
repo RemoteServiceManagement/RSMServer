@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Optional;
+
 /**
  * Created by Dawid on 02.06.2018 at 18:40.
  */
@@ -56,5 +58,34 @@ public class DiagnosisController {
     public String updateDeviceLogs(@ModelAttribute LogDeviceInfo logDeviceInfo, @PathVariable Long reportId) {
         deviceLogDataService.updateData(logDeviceInfo, reportId);
         return  "redirect:/diagnosis/" + reportId + "/device/data";
+    }
+
+
+    @GetMapping("/{reportId}/edit")
+    public String editReportDetails(@PathVariable("reportId") Long reportId, Model model) {
+        Optional<Report> reportOptional = reportService.findById(reportId);
+        if (reportOptional.isPresent()) {
+            Report report = reportOptional.get();
+            model.addAttribute("report", report);
+            model.addAttribute("reportId", reportId);
+        }
+        return "reportDetails";
+    }
+
+    @PostMapping("/{reportId}/edit")
+    public String editReportDetailsPost(@ModelAttribute("report") Report report,
+                                        @ModelAttribute("reportId") Long reportId) {
+        Optional<Report> savedReportOptional = reportService.findById(reportId);
+        if(savedReportOptional.isPresent()) {
+            report.setTitle(savedReportOptional.get().getTitle());
+            report.setDescription(savedReportOptional.get().getDescription());
+            report.setReportDate(savedReportOptional.get().getReportDate());
+            report.setReportPhoto(savedReportOptional.get().getReportPhoto());
+            report.setDevice(savedReportOptional.get().getDevice());
+            report.setCustomer(savedReportOptional.get().getCustomer());
+            report.setEmployee(savedReportOptional.get().getEmployee());
+            reportService.save(report);
+        }
+        return "redirect:/diagnosis/{reportId}/details";
     }
 }

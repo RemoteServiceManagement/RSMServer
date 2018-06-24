@@ -84,7 +84,7 @@
                             <td th:text="${report.description}"></td>
                             <td th:text="${report.reportDate}"></td>
                             <td th:text="${report.reportStatus.reportStatusName}"></td>
-                            <td><a href="#" class="btn btn-secondary">
+                            <td><a th:href="@{'/dashboard/customerDashboard/' + ${report.id} + '/details'}" class="btn btn-secondary">
                                 <i class="fa fa-angle-double-right"></i> Szczegóły
                             </a></td>
                         </tr>
@@ -141,4 +141,6 @@
     </div>
 </div>
 </body>
+<div th:replace="fragments/footer::footer">
+</div>
 </html>

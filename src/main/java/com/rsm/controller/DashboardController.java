@@ -6,6 +6,7 @@ import com.rsm.device.DeviceService;
 import com.rsm.employee.Employee;
 import com.rsm.employee.EmployeeService;
 import com.rsm.report.Report;
+import com.rsm.report.ReportDoesNotExistException;
 import com.rsm.report.ReportService;
 import com.rsm.role.RoleService;
 import com.rsm.user.User;
@@ -62,40 +63,15 @@ public class DashboardController {
         Optional<Employee> optionalEmployee = employeeService.findByUsername(username);
         if (optionalEmployee.isPresent()) {
             List<Report> reports = optionalEmployee.get().getReports();
+            int clientCounter = customerService.findAll().size();
+            int employeeCounter = employeeService.findAll().size();
+            model.addAttribute("clientCounter", clientCounter);
+            model.addAttribute("employeeCounter", employeeCounter);
             model.addAttribute("reports", reports);
             model.addAttribute("reportCounter", reports.size());
         }
         return "employeeDashboard";
     }
-
-    @GetMapping("/employeeDashboard/reportDetails/{reportId}")
-    public String editReportDetails(@PathVariable("reportId") Long reportId, Model model) {
-        Optional<Report> reportOptional = reportService.findById(reportId);
-        if (reportOptional.isPresent()) {
-            Report report = reportOptional.get();
-            model.addAttribute("report", report);
-            model.addAttribute("reportId", reportId);
-        }
-        return "reportDetails";
-    }
-
-    @PostMapping("/employeeDashboard/reportDetails")
-    public String editReportDetailsPost(@ModelAttribute("report") Report report,
-                                        @ModelAttribute("reportId") Long reportId) {
-        Optional<Report> savedReportOptional = reportService.findById(reportId);
-        if(savedReportOptional.isPresent()) {
-            report.setTitle(savedReportOptional.get().getTitle());
-            report.setDescription(savedReportOptional.get().getDescription());
-            report.setReportDate(savedReportOptional.get().getReportDate());
-            report.setReportPhoto(savedReportOptional.get().getReportPhoto());
-            report.setDevice(savedReportOptional.get().getDevice());
-            report.setCustomer(savedReportOptional.get().getCustomer());
-            report.setEmployee(savedReportOptional.get().getEmployee());
-            reportService.save(report);
-        }
-        return "redirect:/dashboard/employeeDashboard";
-    }
-
 
     @GetMapping("/customerDashboard")
     public String customerDashboard(Model model,Principal principal) {
@@ -111,6 +87,19 @@ public class DashboardController {
             model.addAttribute("employeeCounter", employeeCounter);
         }
         return "customerDashboard";
+    }
+
+    @GetMapping("/customerDashboard/{reportId}/details")
+    public String customerReportDetails(@PathVariable Long reportId, Model model, Principal principal) {
+        Report report = reportService.findById(reportId).orElseThrow(ReportDoesNotExistException::new);
+        String username=principal.getName();
+        Optional<Customer> optionalCustomer=customerService.findByUsername(username);
+        if(optionalCustomer.isPresent()) {
+            if(optionalCustomer.get().getReports().contains(report)) {
+                model.addAttribute("report", report);
+            }
+        }
+        return "customerReportDetails";
     }
 
     @GetMapping("/masterDashboard")

@@ -5,6 +5,8 @@ import com.rsm.customer.CustomerService;
 import com.rsm.device.DeviceService;
 import com.rsm.employee.Employee;
 import com.rsm.employee.EmployeeService;
+import com.rsm.report.ReportService;
+import com.rsm.role.RoleService;
 import com.rsm.user.User;
 import com.rsm.user.UserDetails;
 import com.rsm.user.service.UserService;
@@ -26,6 +28,10 @@ public class UserController {
     private final CustomerService customerService;
     private final EmployeeService employeeService;
     private final DeviceService deviceService;
+    private final RoleService roleService;
+    private final ReportService reportService;
+    private static final String masterRole = "MASTER";
+
 
     @RequestMapping("/login")
     public String login() {
@@ -49,13 +55,15 @@ public class UserController {
     }
 
     @RequestMapping("/allClients")
-    public String getAllClients(Model model) {
+    public String getAllClients(Model model, Principal principal) {
         List<Customer> users = customerService.findAll();
+        int reportCounter = getReportsSize(principal);
         int employeeCounter = employeeService.findAll().size();
         int deviceCounter = deviceService.findAll().size();
         model.addAttribute("deviceCounter", deviceCounter);
         model.addAttribute("clientCounter", users.size());
         model.addAttribute("employeeCounter", employeeCounter);
+        model.addAttribute("reportCounter", reportCounter);
         model.addAttribute("users", users);
         return "allClientsList";
     }
@@ -70,13 +78,15 @@ public class UserController {
     }
 
     @RequestMapping("/allEmployees")
-    public String getAllEmployees(Model model) {
+    public String getAllEmployees(Model model, Principal principal) {
         List<Employee> users = employeeService.findAll();
+        int reportCounter = getReportsSize(principal);
         int clientCounter = customerService.findAll().size();
         int deviceCounter = deviceService.findAll().size();
         model.addAttribute("deviceCounter", deviceCounter);
         model.addAttribute("clientCounter", clientCounter);
         model.addAttribute("employeeCounter", users.size());
+        model.addAttribute("reportCounter", reportCounter);
         model.addAttribute("users", users);
         return "allEmployeesList";
     }
@@ -88,5 +98,21 @@ public class UserController {
             model.addAttribute("user", optionalEmployee.get());
         }
         return "userDetails";
+    }
+
+    public int getReportsSize(Principal principal) {
+        Optional<Customer> optionalCustomer = customerService.findByUsername(principal.getName());
+        Optional<Employee> optionalEmployee = employeeService.findByUsername(principal.getName());
+        if(optionalCustomer.isPresent()) {
+            return optionalCustomer.get().getReports().size();
+        }
+        if(optionalEmployee.isPresent()) {
+            if (optionalEmployee.get().getRoles().contains(roleService.findRoleByRoleName(masterRole).orElse(null))) {
+                return reportService.findUnassigned().size();
+            } else {
+                return optionalEmployee.get().getReports().size();
+            }
+        }
+        return 0;
     }
 }
