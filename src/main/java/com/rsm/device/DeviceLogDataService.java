@@ -16,6 +16,7 @@ import org.threeten.extra.Interval;
 import javax.transaction.Transactional;
 import java.sql.Date;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -78,7 +79,7 @@ public class DeviceLogDataService {
     }
 
     private PropertyDefinitionName toNotChosenProperty(BasicPropertyDefinition definition) {
-        return new PropertyDefinitionName(definition.getName(), definition.getCode(), definition.getUnit(), false);
+        return new PropertyDefinitionName(definition.getName(), definition.getCode(), definition.getUnit(), false, definition.isNumerical());
     }
 
 
@@ -88,7 +89,7 @@ public class DeviceLogDataService {
     }
 
     private PropertyDefinitionName toChosenProperty(BasicPropertyDefinition definition) {
-        return new PropertyDefinitionName(definition.getName(), definition.getCode(), definition.getUnit(), true);
+        return new PropertyDefinitionName(definition.getName(), definition.getCode(), definition.getUnit(), true, definition.isNumerical());
     }
 
     public void updateData(LogDeviceInfo logDeviceInfo, Long reportId) {
@@ -102,7 +103,7 @@ public class DeviceLogDataService {
         report.setChosenProperty(toChosenProperty(logDeviceInfo.getDefinitionNames(), report));
 
 
-        Interval interval = Interval.of(chosenDateFrom, chosenDateTo);
+        Interval interval = Interval.of(chosenDateFrom, chosenDateTo.plus(1L, ChronoUnit.DAYS));
         List<String> chosenProperty = report.getChosenPropertyCode();
 
         reportRepository.save(report);
@@ -120,7 +121,7 @@ public class DeviceLogDataService {
     }
 
     private BasicPropertyDefinition toBasicProperty(PropertyDefinitionName property) {
-        return new BasicPropertyDefinition(property.getName(), property.getCode(), property.getUnit());
+        return new BasicPropertyDefinition(property.getName(), property.getCode(), property.getUnit(), property.isNumerical());
     }
 
     public List<BasicPropertyDefinitionNameDto> getDownloadedLogInfo(Long reportId) {

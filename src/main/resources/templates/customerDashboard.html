@@ -84,7 +84,7 @@
                             <td th:text="${report.description}"></td>
                             <td th:text="${report.reportDate}"></td>
                             <td th:text="${report.reportStatus.reportStatusName}"></td>
-                            <td><a href="#" class="btn btn-secondary">
+                            <td><a th:href="@{'/dashboard/customerDashboard/' + ${report.id} + '/details'}" class="btn btn-secondary">
                                 <i class="fa fa-angle-double-right"></i> Szczegóły
                             </a></td>
                         </tr>
@@ -104,9 +104,9 @@
                 </div>
                 <div class="card text-center bg-success text-white mb-5">
                     <div class="card-body">
-                        <h3>Kategorie</h3>
+                        <h3>Urządzenia</h3>
                         <h1 class="display-4">
-                            <i class="fa fa-folder-open-o"></i> 5
+                            <i class="fa fa-folder-open-o"></i> <span th:text="${deviceCounter}"></span>
                         </h1>
                         <a href="#" class="btn btn-outline-light btn-sm">Zobacz</a>
                     </div>
@@ -115,9 +115,9 @@
                     <div class="card-body">
                         <h3>Serwisanci</h3>
                         <h1 class="display-4">
-                            <i class="fa fa-users"></i> 3
+                            <i class="fa fa-users"></i> <span th:text="${employeeCounter}"></span>
                         </h1>
-                        <a href="#" class="btn btn-outline-light btn-sm">Zobacz</a>
+                        <a href="/allEmployees" class="btn btn-outline-light btn-sm">Zobacz</a>
                     </div>
                 </div>
                 <div class="card text-center bg-success text-white mb-5">
@@ -150,4 +150,6 @@
     </div>
 </div>
 </body>
+<div th:replace="fragments/footer::footer">
+</div>
 </html>

@@ -97,41 +97,27 @@
                 </div>
                 <div class="card text-center bg-success text-white mb-5">
                     <div class="card-body">
-                        <h3>Kategorie</h3>
+                        <h3>Klienci</h3>
                         <h1 class="display-4">
-                            <i class="fa fa-folder-open-o"></i> 5
+                            <i class="fa fa-folder-open-o"></i> <span th:text="${clientCounter}"></span>
                         </h1>
-                        <a href="#" class="btn btn-outline-light btn-sm">Zobacz</a>
+                        <a href="/allClients" class="btn btn-outline-light btn-sm">Zobacz</a>
                     </div>
                 </div>
                 <div class="card text-center bg-warning text-white mb-5">
                     <div class="card-body">
                         <h3>Serwisanci</h3>
                         <h1 class="display-4">
-                            <i class="fa fa-users"></i> 3
+                            <i class="fa fa-users"></i> <span th:text="${employeeCounter}"></span>
                         </h1>
-                        <a href="#" class="btn btn-outline-light btn-sm">Zobacz</a>
+                        <a href="/allEmployees" class="btn btn-outline-light btn-sm">Zobacz</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<div class="modal fade" id="addReportModal" th:id="addReportModal">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">Zgłoś usterkę</h5>
-                <button class="close" data-dismiss="modal"><span>&times;</span></button>
-            </div>
-            <div id="addReportBody" class="modal-body">
-
-            </div>
-            <div class="modal-footer">
-
-            </div>
-        </div>
-    </div>
-</div>
 </body>
+<div th:replace="fragments/footer::footer">
+</div>
 </html>

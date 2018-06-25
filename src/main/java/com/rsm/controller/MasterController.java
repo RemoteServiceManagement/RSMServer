@@ -37,14 +37,16 @@ public class MasterController {
     public String postAssignReport(@ModelAttribute("report") Report report,
                                    @ModelAttribute("reportId") Long reportId) {
         Optional<Report> savedReportOptional = reportService.findById(reportId);
-        report.setTitle(savedReportOptional.get().getTitle());
-        report.setDescription(savedReportOptional.get().getDescription());
-        report.setReportDate(savedReportOptional.get().getReportDate());
-        report.setReportPhoto(savedReportOptional.get().getReportPhoto());
-        report.setDevice(savedReportOptional.get().getDevice());
-        report.setReportStatus(savedReportOptional.get().getReportStatus());
-        report.setCustomer(savedReportOptional.get().getCustomer());
-        reportService.save(report);
+        if(savedReportOptional.isPresent()) {
+            report.setTitle(savedReportOptional.get().getTitle());
+            report.setDescription(savedReportOptional.get().getDescription());
+            report.setReportDate(savedReportOptional.get().getReportDate());
+            report.setReportPhoto(savedReportOptional.get().getReportPhoto());
+            report.setDevice(savedReportOptional.get().getDevice());
+            report.setReportStatus(savedReportOptional.get().getReportStatus());
+            report.setCustomer(savedReportOptional.get().getCustomer());
+            reportService.save(report);
+        }
         return "redirect:/dashboard/masterDashboard";
     }
 }

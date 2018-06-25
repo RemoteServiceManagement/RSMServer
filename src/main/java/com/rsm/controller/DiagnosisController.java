@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Optional;
+
 /**
  * Created by Dawid on 02.06.2018 at 18:40.
  */
@@ -31,11 +33,11 @@ public class DiagnosisController {
 
     @GetMapping("{reportId}/details")
     public String getReportDetails(@PathVariable Long reportId, Model model) {
-        model.addAttribute("report", gerReport(reportId));
+        model.addAttribute("report", getReport(reportId));
         return "diagnosis/diagnosis-details";
     }
 
-    private Report gerReport(Long reportId) {
+    private Report getReport(Long reportId) {
         return reportService.findById(reportId).orElseThrow(ReportDoesNotExistException::new);
     }
 
@@ -46,7 +48,7 @@ public class DiagnosisController {
 
     @GetMapping("{reportId}/device/data/{pageNumber}")
     public String showPage(@PathVariable Integer pageNumber, @PathVariable Long reportId, ModelMap model) {
-        model.addAttribute("report", gerReport(reportId));
+        model.addAttribute("report", getReport(reportId));
         model.addAttribute("basicLogDevice", deviceLogDataService.getLogDeviceInfo(reportId));
         model.addAttribute("deviceLog", logTableService.getDeviceLog(reportId, PAGE_SIZE, pageNumber - 1));
         return "diagnosis/diagnosis-data";
@@ -56,5 +58,31 @@ public class DiagnosisController {
     public String updateDeviceLogs(@ModelAttribute LogDeviceInfo logDeviceInfo, @PathVariable Long reportId) {
         deviceLogDataService.updateData(logDeviceInfo, reportId);
         return  "redirect:/diagnosis/" + reportId + "/device/data";
+    }
+
+
+    @GetMapping("/{reportId}/edit")
+    public String editReportDetails(@PathVariable("reportId") Long reportId, Model model) {
+        Optional<Report> reportOptional = reportService.findById(reportId);
+        if (reportOptional.isPresent()) {
+            Report report = reportOptional.get();
+            model.addAttribute("report", report);
+            model.addAttribute("reportId", reportId);
+        }
+        return "reportDetails";
+    }
+
+    @PostMapping("/{reportId}/edit")
+    public String editReportDetailsPost(@ModelAttribute("report") Report report,
+                                        @ModelAttribute("reportId") Long reportId) {
+        Optional<Report> savedReportOptional = reportService.findById(reportId);
+        if(savedReportOptional.isPresent()) {
+            Report savedReport = savedReportOptional.get();
+            savedReport.setReportStatus(report.getReportStatus());
+            savedReport.setPricing(report.getPricing());
+            savedReport.setDiagnosis(report.getDiagnosis());
+            reportService.save(savedReport);
+        }
+        return "redirect:/diagnosis/{reportId}/details";
     }
 }

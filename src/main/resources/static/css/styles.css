@@ -1,33 +1,39 @@
 body {
     background: #333;
-    color: #fff; }
+    color: #fff;
+}
 
 .navbar {
     border-bottom: #008ed6 3px solid;
-    opacity: 0.8; }
+    opacity: 0.8;
+}
 
 #home-section {
     background: url("../images/Sartori-Maintenance-Technician.jpg") no-repeat;
     background-size: cover;
     background-attachment: fixed;
-    min-height:600px;
-    position:relative;
+    min-height: 600px;
+    position: relative;
 }
 
 #home-section .dark-overlay {
     background-color: rgba(0, 0, 0, 0.2);
-    position:absolute;
-    top:0;
-    left:0;
-    bottom:0;
-    width:100%;
-    min-height:300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    min-height: 300px;
 }
+
 #home-section .home-inner {
     padding-top: 75px;
 }
+
 #home-section .card-form {
-    opacity: 0.8; }
+    opacity: 0.8;
+}
+
 #home-section .fa {
     color: #008ed6;
     background: #fff;
@@ -35,6 +41,7 @@ body {
     border-radius: 5px;
     font-size: 30px;
 }
+
 #my-footer {
     display: flex;
     flex-direction: column;
@@ -59,4 +66,18 @@ body {
 
 .margin-left-20 {
     margin-left: -20px;
+}
+
+.container-330 {
+    max-width: 330px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.sidebar-property {
+    margin-top: 10px;
+}
+
+.sidebar-property .active {
+    color: white !important;
 }

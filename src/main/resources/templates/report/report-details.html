@@ -31,20 +31,24 @@
             <p th:text="${'Numer seryjny urządzenia :' + report.device.serialNumber}">
             <p th:text="${'Wewnętrzny numer identyfikacyjny urządzenia :' + report.device.externalId}">
         </div>
-        <form th:if="${showEmployees}" th:action="@{/master/assignReport}" method="post" th:object="${report}">
-            <input type="hidden" th:field="*{id}"/>
+        <h3>Edytuj zgłoszenie:</h3>
+        <form th:action="@{'/diagnosis/'+${reportId}+'/edit'}" method="post" th:object="${report}">
+            <input type="hidden" th:field="*{id}" />
             <div class="form-group">
-                <label for="employeesToAssign">Employees</label>
-                <select id="employeesToAssign" class="form-control" th:field="*{employee}">
-                    <option th:each="employee : ${employees}"
-                            th:value="${employee.id}"
-                            th:utext="${employee.username}">
+                <label for="reportStatus">Status zgłoszenia</label>
+                <select id="reportStatus" class="form-control" th:field="*{reportStatus}">
+                    <option th:each="status:${T(com.rsm.report.ReportStatus).values()}"
+                            th:value="${status.name()}"
+                            th:text="${status.reportStatusName}">
                     </option>
                 </select>
+                <label for="diagnosis">Opis:</label>
+                <textarea id="diagnosis" name="editor1" class="form-control"  th:field="*{diagnosis}"></textarea>
+                <label for="pricing">Cena:</label>
+                <input id="pricing" type="text" class="form-control" th:field="*{pricing}">
             </div>
             <div class="form-group float-right">
-                <a href="/dashboard/masterDashboard" class="btn btn-secondary">Anuluj</a>
-                <button id="mySubmitBtn" class="btn btn-primary" type="submit">Przypisz</button>
+                <button id="mySubmitBtn" class="btn btn-primary" type="submit">Edytuj</button>
             </div>
         </form>
     </div>

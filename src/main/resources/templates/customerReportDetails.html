@@ -33,7 +33,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-3 mr-auto">
-                <a th:href="@{'/diagnosis/' + ${reportId} + '/details'}" class="btn btn-light btn-block">
+                <a href="/dashboard" class="btn btn-light btn-block">
                     <i class="fa fa-arrow-left"></i> Powrót
                 </a>
             </div>
@@ -47,7 +47,7 @@
             <div class="col">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Edytuj zgłoszenie</h4>
+                        <h4>Twoje zgłoszenie:</h4>
                     </div>
                     <div class="card-body">
                         <div>
@@ -59,22 +59,9 @@
                             <p th:text="${'Numer seryjny urządzenia :' + report.device.serialNumber}">
                             <p th:text="${'Wewnętrzny numer identyfikacyjny urządzenia :' + report.device.externalId}">
                         </div>
-                        <form th:action="@{/diagnosis/${reportId}/edit}" method="post" th:object="${report}">
-                            <input type="hidden" th:field="*{id}" />
-                            <div class="form-group">
-                                <label for="reportStatus">Status zgłoszenia</label>
-                                <select id="reportStatus" class="form-control" th:field="*{reportStatus}">
-                                    <option th:each="status:${T(com.rsm.report.ReportStatus).values()}"
-                                            th:value="${status.name()}"
-                                            th:text="${status.reportStatusName}">
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="form-group float-right">
-                                <a th:href="@{'/diagnosis/' + ${reportId} + '/details'}" class="btn btn-secondary">Anuluj</a>
-                                <button id="mySubmitBtn" class="btn btn-primary" type="submit">Edytuj</button>
-                            </div>
-                        </form>
+                        <div class="form-group float-right">
+                            <a href="/dashboard" class="btn btn-secondary">Anuluj</a>
+                        </div>
                     </div>
                 </div>
             </div>
