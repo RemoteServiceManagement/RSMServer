@@ -31,6 +31,7 @@ message PropertyDefinition {
     string name = 1;
     string code = 2;
     string unit = 3;
+    bool numerical = 4;
 }
 
 message DateRange {

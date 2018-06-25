@@ -20,17 +20,19 @@ public class BasicPropertyDefinition extends BaseEntity {
     private String name;
     private String code;
     private String unit;
+    private boolean numerical = false;
 
     @ManyToOne
     private Report report;
 
-    public BasicPropertyDefinition(String name, String code, String unit) {
+    public BasicPropertyDefinition(String name, String code, String unit, boolean numerical) {
         this.name = name;
         this.code = code;
         this.unit = unit;
+        this.numerical = numerical;
     }
 
     public BasicPropertyDefinitionNameDto toPropertyDefinitionName() {
-        return new BasicPropertyDefinitionNameDto(name, code, unit);
+        return new BasicPropertyDefinitionNameDto(name, code, unit, numerical);
     }
 }

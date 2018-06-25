@@ -65,7 +65,7 @@ public class DeviceLogTableService {
 
     private void addDateHeader(List<BasicPropertyDefinitionNameDto> definitionNamesDto) {
         if (!definitionNamesDto.isEmpty()) {
-            definitionNamesDto.add(0, new BasicPropertyDefinitionNameDto(DATE_NAME, DATE_CODE, null));
+            definitionNamesDto.add(0, new BasicPropertyDefinitionNameDto(DATE_NAME, DATE_CODE, null, false));
         }
     }
 
