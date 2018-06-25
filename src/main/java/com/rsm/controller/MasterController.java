@@ -1,11 +1,13 @@
 package com.rsm.controller;
 
+import com.rsm.configuration.EmailSender;
 import com.rsm.employee.Employee;
 import com.rsm.employee.EmployeeService;
 import com.rsm.report.Report;
 import com.rsm.report.ReportService;
 import com.rsm.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,9 @@ public class MasterController {
 
     private final ReportService reportService;
     private final EmployeeService employeeService;
+    @Autowired
+    private EmailSender emailSender;
+
 
     @GetMapping("/assignReport/{reportId}")
     public String getReportToAssign(@PathVariable("reportId") Long reportId, Model model) {
@@ -33,19 +38,15 @@ public class MasterController {
         return "reportAssign";
     }
 
-    @PostMapping("/assignReport")
+    @PostMapping("/assignReport/{reportId}")
     public String postAssignReport(@ModelAttribute("report") Report report,
-                                   @ModelAttribute("reportId") Long reportId) {
-        Optional<Report> savedReportOptional = reportService.findById(reportId);
+                                   @ModelAttribute("reportId") String reportId) {
+        Optional<Report> savedReportOptional = reportService.findById(Long.valueOf(reportId));
         if(savedReportOptional.isPresent()) {
-            report.setTitle(savedReportOptional.get().getTitle());
-            report.setDescription(savedReportOptional.get().getDescription());
-            report.setReportDate(savedReportOptional.get().getReportDate());
-            report.setReportPhoto(savedReportOptional.get().getReportPhoto());
-            report.setDevice(savedReportOptional.get().getDevice());
-            report.setReportStatus(savedReportOptional.get().getReportStatus());
-            report.setCustomer(savedReportOptional.get().getCustomer());
-            reportService.save(report);
+            Report savedReport = savedReportOptional.get();
+            savedReport.setEmployee(report.getEmployee());
+            reportService.save(savedReport);
+            emailSender.sendEmailReportAssigned(savedReport);
         }
         return "redirect:/dashboard/masterDashboard";
     }

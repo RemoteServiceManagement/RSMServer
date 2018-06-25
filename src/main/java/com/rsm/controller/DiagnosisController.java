@@ -1,12 +1,15 @@
 package com.rsm.controller;
 
+import com.rsm.configuration.EmailSender;
 import com.rsm.device.DeviceLogDataService;
 import com.rsm.device.log.DeviceLogTableService;
 import com.rsm.device.log.LogDeviceInfo;
 import com.rsm.report.Report;
 import com.rsm.report.ReportDoesNotExistException;
 import com.rsm.report.ReportService;
+import com.rsm.report.ReportStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -30,6 +34,9 @@ public class DiagnosisController {
     private final ReportService reportService;
     private final DeviceLogDataService deviceLogDataService;
     private final DeviceLogTableService logTableService;
+    @Autowired
+    private EmailSender emailSender;
+
 
     @GetMapping("{reportId}/details")
     public String getReportDetails(@PathVariable Long reportId, Model model) {
@@ -74,13 +81,16 @@ public class DiagnosisController {
 
     @PostMapping("/{reportId}/edit")
     public String editReportDetailsPost(@ModelAttribute("report") Report report,
-                                        @ModelAttribute("reportId") Long reportId) {
-        Optional<Report> savedReportOptional = reportService.findById(reportId);
+                                        @ModelAttribute("reportId") String reportId) {
+        Optional<Report> savedReportOptional = reportService.findById(Long.valueOf(reportId));
         if(savedReportOptional.isPresent()) {
             Report savedReport = savedReportOptional.get();
             savedReport.setReportStatus(report.getReportStatus());
             savedReport.setPricing(report.getPricing());
             savedReport.setDiagnosis(report.getDiagnosis());
+            if(report.getReportStatus().equals(ReportStatus.FINISHED)) {
+                emailSender.sendEmailReportFinished(savedReport);
+            }
             reportService.save(savedReport);
         }
         return "redirect:/diagnosis/{reportId}/details";

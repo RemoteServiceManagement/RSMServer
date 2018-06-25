@@ -1,5 +1,6 @@
 package com.rsm.controller;
 
+import com.rsm.configuration.EmailSender;
 import com.rsm.customer.Customer;
 import com.rsm.customer.CustomerService;
 import com.rsm.device.DeviceService;
@@ -11,6 +12,7 @@ import com.rsm.user.User;
 import com.rsm.user.UserDetails;
 import com.rsm.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +33,6 @@ public class UserController {
     private final RoleService roleService;
     private final ReportService reportService;
     private static final String masterRole = "MASTER";
-
 
     @RequestMapping("/login")
     public String login() {
