@@ -2,18 +2,23 @@ package com.rsm.controller;
 
 import com.rsm.customer.Customer;
 import com.rsm.customer.CustomerService;
+import com.rsm.device.Device;
 import com.rsm.device.DeviceService;
+import com.rsm.device.log.remote.connection.RemoteServiceCredential;
 import com.rsm.employee.Employee;
 import com.rsm.employee.EmployeeService;
 import com.rsm.report.ReportService;
 import com.rsm.role.RoleService;
 import com.rsm.user.User;
-import com.rsm.user.UserDetails;
 import com.rsm.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
@@ -76,6 +81,40 @@ public class UserController {
         }
         return "userDetails";
     }
+
+    @GetMapping("/allClients/{userId}/devices")
+    public String getCustomerDevices(@PathVariable Long userId, Model model) {
+        model.addAttribute("devices", customerService.findCustomersDevices(userId));
+        Optional<Customer> optionalCustomer = customerService.findById(userId);
+        optionalCustomer.ifPresent(customer -> model.addAttribute("user", customer));
+        return "customer/devices";
+    }
+
+    @GetMapping("/allClients/{userId}/addDeviceForm")
+    public String reportForm(@PathVariable Long userId, Model model) {
+        Device device = new Device();
+        device.setRemoteServiceCredential(new RemoteServiceCredential());
+        Optional<Customer> optionalCustomer = customerService.findById(userId);
+        optionalCustomer.ifPresent(customer -> model.addAttribute("user", customer));
+        model.addAttribute(device);
+        return "customer/addDeviceForm";
+    }
+
+    @PostMapping("/allClients/{userId}/addDeviceForm")
+    public String reportFormPost(@PathVariable Long userId, @ModelAttribute Device device,
+                                 BindingResult result, Model model,
+                                 Principal principal) {
+        Optional<Customer> optionalCustomer = customerService.findById(userId);
+        if (optionalCustomer.isPresent()) {
+            Customer customer = optionalCustomer.get();
+            device.setCustomer(customer);
+            device.getRemoteServiceCredential().setCustomer(customer);
+            deviceService.save(device);
+            model.addAttribute("user", customer);
+        }
+        return "redirect:/allClients/{userId}/devices".replace("{userId}", userId.toString());
+    }
+
 
     @RequestMapping("/allEmployees")
     public String getAllEmployees(Model model, Principal principal) {

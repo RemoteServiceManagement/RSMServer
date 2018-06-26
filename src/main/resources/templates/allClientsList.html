@@ -70,6 +70,9 @@
                             <td><a th:href="@{'/allClients/' + ${user.id}}" class="btn btn-secondary">
                                 <i class="fa fa-angle-double-right"></i> Szczegóły
                             </a>
+                            <a th:href="@{'/allClients/' + ${user.id} + '/devices'}" class="btn btn-secondary">
+                                <i class="fa fa-angle-double-right"></i> Urządzenia
+                            </a>
                             </td>
                         </tr>
                         </tbody>

@@ -6,6 +6,7 @@ import com.rsm.device.log.remote.connection.RemoteServiceCredential;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -33,7 +34,7 @@ public class Device extends BaseEntity {
     @ManyToOne
     private Customer customer;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private RemoteServiceCredential remoteServiceCredential;
 
 }
