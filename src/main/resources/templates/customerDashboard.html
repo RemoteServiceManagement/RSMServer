@@ -28,6 +28,16 @@
             xhttp.send();
         }
     </script>
+    <script type="text/javascript">
+        function changeSubmitButtonState() {
+            var approvalCheckbox = document.getElementById("approvalCheckbox");
+            if(approvalCheckbox.checked) {
+                document.getElementById("mySubmitBtn").disabled =  false;
+            } else {
+                document.getElementById("mySubmitBtn").disabled =  true;
+            }
+        }
+    </script>
 </head>
 <div th:replace="fragments/header::header">
 </div>

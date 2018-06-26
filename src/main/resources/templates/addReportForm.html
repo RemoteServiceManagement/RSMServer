@@ -41,17 +41,19 @@
     </div>
     <div class="form-group">
         <label for="deviceSerialNumber">Numer seryjny urządzenia(SERIAL_NUMBER)</label>
-        <input id="deviceSerialNumber" class="form-control"  th:field="*{device.serialNumber}"></input>
+        <input id="deviceSerialNumber" class="form-control"  th:field="*{device.serialNumber}"/>
     </div>
 
     <div class="form-group">
         <label for="deviceDescription">Opis urządzenia</label>
         <textarea id="deviceDescription" name="editor1" class="form-control"  th:field="*{device.description}"></textarea>
     </div>
+    <label for="approvalCheckbox">Zgoda na przetwarzanie danych urządzenia *</label>
+    <input id="approvalCheckbox" type="checkbox" name="active" onclick="changeSubmitButtonState();"/>
     <div class="form-group float-right">
-        <button class="btn btn-secondary"
-                data-dismiss="modal">Anuluj</button>
-        <button id="mySubmitBtn" class="btn btn-primary" type="submit" onclick="alert('Usterka została zgłoszona');">Zgłoś usterkę</button>
+        <button class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+        <button id="mySubmitBtn" class="btn btn-primary" type="submit"
+                onclick="alert('Usterka została zgłoszona');" disabled>Zgłoś usterkę</button>
     </div>
 </form>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
