@@ -39,7 +39,7 @@ public class EmailSender {
             helper.setText("Poniższe zgłoszenie zostało przydzielone do diagnozy technikowi. Wraz z końcem diagnozy " +
                     "otrzymają Państwo kolejnego maila z informacją i fakturą.\nTytuł: " + report.getTitle() +
                     "\nOpis:" + report.getDescription() + "\nDane kontaktowe technika: \nImie: " + employee.getFirstName() +
-            "\nNazwisko: " + employee.getLastName() + "\nTelefon: " + employee.getPhone() + "\nEmail: " + employee.getEmail());
+                    "\nNazwisko: " + employee.getLastName() + "\nTelefon: " + employee.getPhone() + "\nEmail: " + employee.getEmail());
 
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -62,7 +62,7 @@ public class EmailSender {
                 document.open();
 
                 PdfPTable table = new PdfPTable(2);
-                table.setWidths(new float[] { 1, 4 });
+                table.setWidths(new float[]{1, 4});
                 table.addCell(new PdfPCell(new Paragraph("Tytul zgloszenia")));
                 table.addCell(new PdfPCell(new Paragraph(report.getTitle())));
                 table.addCell(new PdfPCell(new Paragraph("Opis zgloszenia")));
@@ -71,7 +71,7 @@ public class EmailSender {
                 table.addCell(new PdfPCell(new Paragraph(report.getDiagnosis())));
                 table.addCell(new PdfPCell(new Paragraph("Pracownik")));
                 table.addCell(new PdfPCell(new Paragraph(report.getEmployee().getDetails().getFirstName() + " " +
-                report.getEmployee().getDetails().getLastName())));
+                        report.getEmployee().getDetails().getLastName())));
                 table.addCell(new PdfPCell(new Paragraph("Kontakt telefoniczny")));
                 table.addCell(new PdfPCell(new Paragraph(report.getEmployee().getDetails().getPhone())));
                 table.addCell(new PdfPCell(new Paragraph("Wycena")));
@@ -93,14 +93,33 @@ public class EmailSender {
                     "\nNazwisko: " + employee.getLastName() + "\nTelefon: " + employee.getPhone() + "\nEmail: " + employee.getEmail());
 
             MimeBodyPart messageBodyPart2 = new MimeBodyPart();
-            messageBodyPart2.setDataHandler(new DataHandler(new ByteArrayDataSource(baos.toByteArray(),"application/pdf")));
-            messageBodyPart2.setFileName("Diagnoza-"+ report.getTitle() + ".pdf");
+            messageBodyPart2.setDataHandler(new DataHandler(new ByteArrayDataSource(baos.toByteArray(), "application/pdf")));
+            messageBodyPart2.setFileName("Diagnoza-" + report.getTitle() + ".pdf");
 
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart1);
             multipart.addBodyPart(messageBodyPart2);
 
             mail.setContent(multipart);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        javaMailSender.send(mail);
+    }
+
+    public void sendEmailUpdateReport(Report report, String description) {
+        MimeMessage mail = javaMailSender.createMimeMessage();
+        UserDetails employee = report.getEmployee().getDetails();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+            helper.setTo(report.getCustomer().getDetails().getEmail());
+            helper.setSubject("Prośba o uzupełnienie zgłoszenia");
+            helper.setText("Przez brak potrzebnych informacji nie jesteśmy w stanie ukończyć diagnozy\n\n" +
+                    "Przyczyna: " + description +
+                    "\n\nProsimy o reakcję dla poniższego zgłoszenia:\nTytuł: " + report.getTitle() +
+                    "\nOpis:" + report.getDescription() + "\nDane kontaktowe technika: \nImie: " + employee.getFirstName() +
+                    "\nNazwisko: " + employee.getLastName() + "\nTelefon: " + employee.getPhone() + "\nEmail: " + employee.getEmail());
 
         } catch (MessagingException e) {
             e.printStackTrace();

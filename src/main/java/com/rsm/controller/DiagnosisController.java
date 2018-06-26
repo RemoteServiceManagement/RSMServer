@@ -95,4 +95,24 @@ public class DiagnosisController {
         }
         return "redirect:/diagnosis/{reportId}/details";
     }
+
+    @GetMapping("{reportId}/customerDetails")
+    public String getReportCustomerDetails(@PathVariable Long reportId, Model model) {
+        Report report = getReport(reportId);
+        report.setDiagnosis("");
+        model.addAttribute("report", report);
+        model.addAttribute("customer", report.getCustomer());
+        return "diagnosis/customer-details";
+    }
+
+    @PostMapping("{reportId}/mail")
+    public String sendMailToCustomer(@ModelAttribute("report") Report report,
+                                     @ModelAttribute("reportId") String reportId) {
+        Optional<Report> savedReportOptional = reportService.findById(Long.valueOf(reportId));
+        if(savedReportOptional.isPresent()) {
+            emailSender.sendEmailUpdateReport(savedReportOptional.get(), report.getDiagnosis());
+
+        }
+        return "redirect:/diagnosis/{reportId}/customerDetails";
+    }
 }
