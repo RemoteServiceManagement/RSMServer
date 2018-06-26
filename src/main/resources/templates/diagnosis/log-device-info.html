@@ -21,7 +21,7 @@
     <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
 </head>
 <body>
-<div th:fragment="device-info(basicLogDevice, updateUrl)">
+<div th:fragment="device-info(basicLogDevice, updateUrl, report)">
     <h3>Informacje o pobranych danych</h3>
     <form th:object="${basicLogDevice}" method="post" th:action="@{${updateUrl}}">
         <div>
@@ -54,8 +54,8 @@
     </form>
     <script type="text/javascript" th:inline="javascript">
         /*<![CDATA[*/
-        var dateFrom = /*[[${basicLogDevice.availableDataFrom.getTime()}]]*/;
-        var dateTo = /*[[${basicLogDevice.availableDataTo.getTime()}]]*/;
+        var dateFrom = /*[[${report.deviceDataFrom.getTime()}]]*/;
+        var dateTo = /*[[${report.deviceDataTo.getTime()}]]*/;
 
         $('#date-start').attr('min', moment(dateFrom).format('YYYY-MM-DD'));
         $('#date-start').attr('max', moment(dateTo).format('YYYY-MM-DD'));

@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport"
-          content="width=device-width,initial-scale=1.0" />
+          content="width=device-width,initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible"
-          content="ie=edge" />
+          content="ie=edge"/>
     <title>Serwisowanie Online</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+          integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+            integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+            crossorigin="anonymous"></script>
     <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
     <script>
-        CKEDITOR.replace( 'editor1' );
+        CKEDITOR.replace('editor1');
+
         function changeModalContent() {
 
             var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
+            xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     document.getElementById("addReportBody").innerHTML = this.response;
 
@@ -31,10 +37,10 @@
     <script type="text/javascript">
         function changeSubmitButtonState() {
             var approvalCheckbox = document.getElementById("approvalCheckbox");
-            if(approvalCheckbox.checked) {
-                document.getElementById("mySubmitBtn").disabled =  false;
+            if (approvalCheckbox.checked) {
+                document.getElementById("mySubmitBtn").disabled = false;
             } else {
-                document.getElementById("mySubmitBtn").disabled =  true;
+                document.getElementById("mySubmitBtn").disabled = true;
             }
         }
     </script>
@@ -43,21 +49,21 @@
 </div>
 <body>
 <header class="main-header py-2 bg-primary text-white mb-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h1><i class="fa fa-gear"></i> Panel Klienta</h1>
-                </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1><i class="fa fa-gear"></i> Panel Klienta</h1>
             </div>
         </div>
+    </div>
 </header>
 <section id="action" class="py-4 mb-4 bg-light">
     <div class="container">
         <div class="row">
             <div class="col-md-3">
                 <button id="addReportLink" class="btn btn-primary btn-block"
-                   data-toggle="modal" data-target="#addReportModal"
-                   th:attr="data-target='#addReportModal'" onclick="changeModalContent()">
+                        data-toggle="modal" data-target="#addReportModal"
+                        th:attr="data-target='#addReportModal'" onclick="changeModalContent()">
                     <i class="fa fa-plus"></i> Zgłoś usterkę
                 </button>
             </div>
@@ -89,12 +95,14 @@
                         <tr th:each="report: ${reports}">
                             <td th:text="${report.id}"></td>
                             <td th:text="${report.title}"></td>
-                            <td th:if="${report.device!=null}" th:text="${report.device.brand + ' ' + report.device.model}"></td>
+                            <td th:if="${report.device!=null}"
+                                th:text="${report.device.brand + ' ' + report.device.model}"></td>
                             <td th:if="${report.device == null}" th:text="${'brak danych'}"></td>
                             <td th:text="${report.description}"></td>
                             <td th:text="${report.reportDate}"></td>
                             <td th:text="${report.reportStatus.reportStatusName}"></td>
-                            <td><a th:href="@{'/dashboard/customerDashboard/' + ${report.id} + '/details'}" class="btn btn-secondary">
+                            <td><a th:href="@{'/dashboard/customerDashboard/' + ${report.id} + '/details'}"
+                                   class="btn btn-secondary">
                                 <i class="fa fa-angle-double-right"></i> Szczegóły
                             </a></td>
                         </tr>

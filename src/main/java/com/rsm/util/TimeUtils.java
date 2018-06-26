@@ -10,6 +10,10 @@ import java.util.TimeZone;
  */
 public class TimeUtils {
     public static Instant changeOffsetToUTCWithoutChangingDateTime(Date chosenDateFrom) {
+        if (chosenDateFrom == null) {
+            return null;
+        }
+
         Calendar utcTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(chosenDateFrom);
@@ -19,5 +23,22 @@ public class TimeUtils {
             }
         }
         return utcTime.getTime().toInstant();
+    }
+
+    public static Date changeOffsetToUTCWithoutChangingDate(Date chosenDateFrom) {
+        if (chosenDateFrom == null) {
+            return null;
+        }
+
+        Calendar utcTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(chosenDateFrom);
+        for( int i = 0; i < Calendar.FIELD_COUNT; i++ ) {
+            if( (i != Calendar.ZONE_OFFSET) && (i != Calendar.DST_OFFSET) ) {
+                utcTime.set(i, calendar.get(i));
+            }
+        }
+
+        return utcTime.getTime();
     }
 }
