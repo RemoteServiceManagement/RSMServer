@@ -28,30 +28,15 @@
         <input id="file" name="file" type="file" class="form-control-file">
     </div>
     <div class="form-group">
-        <label for="deviceBrand">Producent urządzenia</label>
-        <input id="deviceBrand" type="text" class="form-control" th:field="*{device.brand}">
-    </div>
-    <div class="form-group">
-        <label for="deviceModel">Model urządzenia</label>
-        <input id="deviceModel" type="text" class="form-control" th:field="*{device.model}">
-    </div>
-    <div class="form-group">
-        <label for="deviceExternalId">Numer identyfikacyjny urządzenia(EXTERNAL_ID)</label>
-        <input id="deviceExternalId" type="text" class="form-control" th:field="*{device.externalId}">
-    </div>
-    <div class="form-group">
-        <label for="deviceSerialNumber">Numer seryjny urządzenia(SERIAL_NUMBER)</label>
-        <input id="deviceSerialNumber" class="form-control"  th:field="*{device.serialNumber}"></input>
-    </div>
-
-    <div class="form-group">
-        <label for="deviceDescription">Opis urządzenia</label>
-        <textarea id="deviceDescription" name="editor1" class="form-control"  th:field="*{device.description}"></textarea>
+        <label for="devices">Urządzenie</label>
+        <select id="devices" th:field="${report.device.id}">
+            <option th:each="devicei : ${devices}" th:value="${devicei.id}" th:text="${devicei.toString()}"></option>
+        </select>
     </div>
     <div class="form-group float-right">
         <button class="btn btn-secondary"
                 data-dismiss="modal">Anuluj</button>
-        <button id="mySubmitBtn" class="btn btn-primary" type="submit" onclick="alert('Usterka została zgłoszona');">Zgłoś usterkę</button>
+        <button id="mySubmitBtn" class="btn btn-primary" type="submit">Zgłoś usterkę</button>
     </div>
 </form>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>

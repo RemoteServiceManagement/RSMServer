@@ -37,4 +37,8 @@ public class Device extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     private RemoteServiceCredential remoteServiceCredential;
 
+    @Override
+    public String toString() {
+        return getId() + ": " + externalId;
+    }
 }
