@@ -102,6 +102,7 @@ public class DashboardController {
         if(optionalCustomer.isPresent()) {
             if(optionalCustomer.get().getReports().contains(report)) {
                 model.addAttribute("report", report);
+                model.addAttribute("reportCopies", report.getReportCopies());
             }
         }
         return "customerReportDetails";

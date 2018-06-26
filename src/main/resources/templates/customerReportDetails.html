@@ -30,6 +30,22 @@
 
         }
     </script>
+    <script th:inline="javascript">
+        CKEDITOR.replace('editor1');
+
+        function changeModalContentNoEdit(reportCopyId) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("addReportBodyNoEdit").innerHTML = this.response;
+
+                }
+            };
+            xhttp.open("GET", "http://localhost:8080/diagnosis/[[${report.id}]]/edited/"+reportCopyId, true);
+            xhttp.send();
+
+        }
+    </script>
 </head>
 <div th:replace="fragments/header::header">
 </div>
@@ -96,6 +112,35 @@
             </div>
         </div>
     </div>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h4>Edycje:</h4>
+            </div>
+            <table class="table table-striped">
+                <thead class="thead-inverse">
+                <tr>
+                    <th>#</th>
+                    <th>Data</th>
+                    <th>Akcja</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="reportCopy: ${reportCopies}">
+                    <td th:text="${reportCopy.id}"></td>
+                    <td th:text="${reportCopy.reportDate}"></td>
+                    <td><button id="addReportLinkNoEdit" class="btn btn-primary"
+                        data-toggle="modal" data-target="#addReportModal"
+                        th:attr="data-target='#addReportModalNoEdit'" th:onclick="'changeModalContentNoEdit(\'' + ${reportCopy.id} + '\');'">
+                        <i class="fa fa-plus"></i>Szczegóły
+                    </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>
 <div class="modal fade" id="addReportModal" th:id="addReportModal">
     <div class="modal-dialog modal-lg">
@@ -108,7 +153,21 @@
 
             </div>
             <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addReportModalNoEdit" th:id="addReportModalNoEdit">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Szczegóły edycji</h5>
+                <button class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div id="addReportBodyNoEdit" class="modal-body">
 
+            </div>
+            <div class="modal-footer">
             </div>
         </div>
     </div>
