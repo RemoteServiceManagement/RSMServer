@@ -53,7 +53,6 @@ public class Report extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReportStatus reportStatus;
 
-
     @ManyToOne
     @JoinColumn(name="EMPLOYEE_ID")
     private Employee employee;
@@ -70,6 +69,9 @@ public class Report extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "report")
     private List<BasicPropertyDefinition> chosenProperty;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "report")
+    private List<ReportCopy> reportCopies;
 
     private Instant chosenDateFrom;
 

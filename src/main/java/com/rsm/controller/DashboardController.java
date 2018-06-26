@@ -2,12 +2,11 @@ package com.rsm.controller;
 
 import com.rsm.customer.Customer;
 import com.rsm.customer.CustomerService;
+import com.rsm.device.Device;
 import com.rsm.device.DeviceService;
 import com.rsm.employee.Employee;
 import com.rsm.employee.EmployeeService;
-import com.rsm.report.Report;
-import com.rsm.report.ReportDoesNotExistException;
-import com.rsm.report.ReportService;
+import com.rsm.report.*;
 import com.rsm.role.RoleService;
 import com.rsm.user.User;
 import com.rsm.user.service.UserService;
@@ -16,13 +15,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,9 +40,11 @@ public class DashboardController {
     private final ReportService reportService;
     private final RoleService roleService;
     private final DeviceService deviceService;
+    private final ReportCopyService reportCopyService;
     private static final String masterRole = "MASTER";
     private static final String employeeRole = "EMPLOYEE";
     private static final String customerRole = "CUSTOMER";
+    private static final String UPLOADED_FOLDER="src/main/resources/static/images/uploads/";
 
     @GetMapping("")
     public String dashboard(Principal principal){
@@ -126,6 +131,41 @@ public class DashboardController {
         model.addAttribute("reports", reports);
         model.addAttribute("reportCounter", unnasignedReportsSize);
         return "allReportsMaster";
+    }
+
+    @GetMapping("/customerDashboard/{reportId}/details/edit")
+    public String editReport(@PathVariable Long reportId, Model model){
+        Optional<Report> optionalReport=reportService.findById(reportId);
+        if(optionalReport.isPresent()) {
+            ReportCopy reportCopy = new ReportCopy();
+            reportCopy.setDescription(optionalReport.get().getDescription());
+            model.addAttribute("report", reportCopy);
+        }
+        return "customerReportEdit";
+    }
+
+    @PostMapping("/customerDashboard/{reportId}/details/edit")
+    public String editReportAddReportCopy(@PathVariable Long reportId, @ModelAttribute("report")ReportCopy reportCopy, BindingResult result, Model model,
+                                          @RequestParam(name = "file",required = false) MultipartFile file,
+                                          Principal principal){
+        Optional<Report> optionalReport=reportService.findById(reportId);
+        if(optionalReport.isPresent()) {
+            Report originalReport = optionalReport.get();
+            if(file!=null && !file.isEmpty()) {
+                try {
+                    byte[] bytes = file.getBytes();
+                    reportCopy.setReportPhoto(bytes);
+                    Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+                    Files.write(path, bytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            reportCopy.setReport(originalReport);
+            reportCopy.setReportDate(LocalDate.now());
+            reportCopyService.save(reportCopy);
+        }
+        return "redirect:/dashboard/customerDashboard/{reportId}/details/";
     }
 
 }

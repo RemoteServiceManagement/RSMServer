@@ -4,10 +4,7 @@ import com.rsm.configuration.EmailSender;
 import com.rsm.device.DeviceLogDataService;
 import com.rsm.device.log.DeviceLogTableService;
 import com.rsm.device.log.LogDeviceInfo;
-import com.rsm.report.Report;
-import com.rsm.report.ReportDoesNotExistException;
-import com.rsm.report.ReportService;
-import com.rsm.report.ReportStatus;
+import com.rsm.report.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +29,7 @@ import java.util.Optional;
 public class DiagnosisController {
     private static final int PAGE_SIZE = 100;
     private final ReportService reportService;
+    private final ReportCopyService reportCopyService;
     private final DeviceLogDataService deviceLogDataService;
     private final DeviceLogTableService logTableService;
     @Autowired
@@ -114,5 +112,23 @@ public class DiagnosisController {
 
         }
         return "redirect:/diagnosis/{reportId}/customerDetails";
+    }
+
+    @GetMapping("{reportId}/edited")
+    public String getReportEditedVersions(@PathVariable Long reportId, Model model) {
+        Report report = getReport(reportId);
+        model.addAttribute("report", report);
+        model.addAttribute("reportCopies", report.getReportCopies());
+        return "diagnosis/report-copies-list";
+    }
+
+    @GetMapping("{reportId}/edited/{reportCopyId}")
+    public String getReportEdited(@PathVariable Long reportId, @PathVariable Long reportCopyId, Model model) {
+        Report report = getReport(reportId);
+        Optional<ReportCopy> optionalReportCopy = reportCopyService.findById(reportCopyId);
+        if(optionalReportCopy.isPresent()) {
+            model.addAttribute("reportCopy", optionalReportCopy.get());
+        }
+        return "diagnosis/report-copy";
     }
 }

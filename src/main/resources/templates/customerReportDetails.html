@@ -13,8 +13,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
-    <script>
-        CKEDITOR.replace( 'editor1' );
+    <script th:inline="javascript">
+        CKEDITOR.replace('editor1');
+
+        function changeModalContent() {
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("addReportBody").innerHTML = this.response;
+
+                }
+            };
+            xhttp.open("GET", "http://localhost:8080/dashboard/customerDashboard/[[${report.id}]]/details/edit", true);
+            xhttp.send();
+
+        }
     </script>
 </head>
 <div th:replace="fragments/header::header">
@@ -29,6 +43,21 @@
         </div>
     </div>
 </header>
+
+<section id="actionModal" class="py-4 mb-4 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <button id="addReportLink" class="btn btn-primary btn-block"
+                        data-toggle="modal" data-target="#addReportModal"
+                        th:attr="data-target='#addReportModal'" onclick="changeModalContent()">
+                    <i class="fa fa-plus"></i> Edytuj zgłoszenie
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section id="action" class="py-4 mb-4 bg-light">
     <div class="container">
         <div class="row">
@@ -68,7 +97,22 @@
         </div>
     </div>
 </section>
+<div class="modal fade" id="addReportModal" th:id="addReportModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Edytuj zgłoszenie</h5>
+                <button class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div id="addReportBody" class="modal-body">
 
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
