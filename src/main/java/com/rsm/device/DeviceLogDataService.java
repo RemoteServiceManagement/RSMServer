@@ -14,14 +14,15 @@ import org.springframework.stereotype.Service;
 import org.threeten.extra.Interval;
 
 import javax.transaction.Transactional;
-import java.sql.Date;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.rsm.util.TimeUtils.changeOffsetToUTCWithoutChangingDateTime;
 import static java.util.Date.from;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -61,7 +62,7 @@ public class DeviceLogDataService {
         return logDeviceInfo;
     }
 
-    private java.util.Date getDate(Instant date) {
+    private Date getDate(Instant date) {
         return ofNullable(date).map(Date::from).orElse(null);
     }
 
@@ -96,9 +97,9 @@ public class DeviceLogDataService {
         Report report = getReport(reportId);
         propertyService.removeAll(report.getChosenProperty());
 
-        Instant chosenDateFrom = logDeviceInfo.getChosenDateFrom().toInstant();
+        Instant chosenDateFrom = changeOffsetToUTCWithoutChangingDateTime(logDeviceInfo.getChosenDateFrom());
         report.setChosenDateFrom(chosenDateFrom);
-        Instant chosenDateTo = logDeviceInfo.getChosenDateTo().toInstant();
+        Instant chosenDateTo = changeOffsetToUTCWithoutChangingDateTime(logDeviceInfo.getChosenDateTo());
         report.setChosenDateTo(chosenDateTo);
         report.setChosenProperty(toChosenProperty(logDeviceInfo.getDefinitionNames(), report));
 
@@ -110,6 +111,8 @@ public class DeviceLogDataService {
         remoteDeviceLogService.downloadDeviceLogs(report.getReportedDeviceServiceCredential(),
                 report.getReportedDeviceExternalId(), interval, chosenProperty, reportId);
     }
+
+
 
     private List<BasicPropertyDefinition> toChosenProperty(List<PropertyDefinitionName> definitionNames, Report report) {
         return definitionNames

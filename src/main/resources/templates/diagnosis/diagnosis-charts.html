@@ -28,20 +28,11 @@
     <div class="row">
         <div class="col-sm-3">
             <div th:replace="diagnosis/sidebar::sidebar(reportId=${reportId})"></div>
-
-            <div class="sidebar-property">
-                <div class="list-group">
-                    <a th:each="propertyDefinition : ${logDeviceParameters}"
-                       th:href="@{'/diagnosis/' + ${reportId} + '/chart/' + *{propertyDefinition.code}}"
-                       th:text="*{propertyDefinition.name}"
-                       th:classappend="${propertyDefinition.getCode() == chartPropertyData.getPropertyCode()} ? 'active'"
-                       class="list-group-item text-secondary">
-                    </a>
-                </div>
-            </div>
         </div>
         <div class="col-sm">
-            <div th:replace="chart/chart::chart(chartData=${chartPropertyData})"></div>
+            <div th:each="chartPropertyData : ${chartPropertiesData}">
+                <div th:replace="chart/chart::chart(chartData=${chartPropertyData})"></div>
+            </div>
         </div>
     </div>
 </div>

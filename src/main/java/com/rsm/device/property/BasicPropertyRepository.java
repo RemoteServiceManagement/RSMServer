@@ -12,5 +12,5 @@ import java.util.List;
 public interface BasicPropertyRepository extends CrudRepository<BasicPropertyDefinition, Long> {
     BasicPropertyDefinition getByReport_IdAndCode(Long reportId, String code);
 
-    List<BasicPropertyDefinition> getByReport_Id(Long reportId);
+    List<BasicPropertyDefinition> getByReport_IdAndNumericalIsTrue(Long reportId);
 }
