@@ -9,6 +9,7 @@ import com.rsm.device.property.BasicPropertyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -25,13 +26,23 @@ public class DeviceChartService {
     private final LogDeviceParameterRepository repository;
     private final BasicPropertyService basicPropertyService;
 
-    public ChartPropertyData getDevicePropertyChartData(Long reportId, String propertyCode) {
+    public List<ChartPropertyData> getDevicePropertyChartData(Long reportId) {
         DeviceLogDto deviceLog = repository.getDeviceLog(reportId.toString());
-        String chartData = new Gson().toJson(getChartData(deviceLog.getLogs(), propertyCode));
-        BasicPropertyDefinition propertyDefinition = basicPropertyService.getByReportIdAndCode(reportId, propertyCode);
+        List<BasicPropertyDefinition> propertyDefinitions = getDevicesProperties(reportId);
 
-        return Optional.ofNullable(propertyDefinition).map(property -> new ChartPropertyData(chartData, property.getName(),
-                property.getUnit(), property.getCode())).orElse(null);
+        return propertyDefinitions.stream().map(property -> toChartData(deviceLog.getLogs(), property)).collect(toList());
+    }
+
+    private ChartPropertyData toChartData(List<LogDto> logs, BasicPropertyDefinition property) {
+        String chartData = new Gson().toJson(getChartData(logs, property.getCode()));
+
+        return new ChartPropertyData(chartData, property.getName(),
+                property.getUnit(), property.getCode());
+    }
+
+    private List<BasicPropertyDefinition> getDevicesProperties(Long reportId) {
+        return Optional.ofNullable(basicPropertyService.getByReportId(reportId))
+                .orElse(new ArrayList<>());
     }
 
     private List<SingleProperty> getChartData(List<LogDto> logs, String propertyCode) {

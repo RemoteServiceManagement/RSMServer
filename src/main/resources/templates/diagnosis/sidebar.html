@@ -24,7 +24,10 @@
 <div class="sidebar" th:fragment="sidebar(reportId)">
     <div class="list-group">
         <a th:href="@{'/diagnosis/' + ${reportId} + '/details'}" class="list-group-item text-secondary">
-            Szczegóły
+            Szczegóły Raportu
+        </a>
+        <a th:href="@{'/diagnosis/' + ${reportId} + '/customerDetails'}" class="list-group-item text-secondary">
+            Szczegóły Klienta
         </a>
         <a th:href="@{'/diagnosis/' + ${reportId} + '/device/data'}" class="list-group-item text-secondary">
             Dane

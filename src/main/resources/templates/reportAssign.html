@@ -55,7 +55,32 @@
                         <h4>Edytuj zgłoszenie</h4>
                     </div>
                     <div class="card-body">
-                        <div th:replace="report/report-details::details(report=${report}, showEmployees=true)"></div>
+                        <div>
+                            <h3>Szczegóły zgłoszenia</h3>
+                            <p th:text="${'Id zgłoszenia: ' +  report.id}">
+                            <p th:text="${'Tytuł zgłoszenia: ' +  report.title}">
+                            <p th:text="${'Opis problemu: ' +  report.description}">
+                            <p th:text="${'Nazwa urządzenia:' + report.device.brand + ' ' + report.device.model}">
+                            <p th:text="${'Opis urządzenia:' + report.device.description}">
+                            <p th:text="${'Numer seryjny urządzenia :' + report.device.serialNumber}">
+                            <p th:text="${'Wewnętrzny numer identyfikacyjny urządzenia :' + report.device.externalId}">
+                        </div>
+                        <form th:action="@{'/master/assignReport/'+${reportId}}" method="post" th:object="${report}">
+                            <input type="hidden" th:field="*{id}"/>
+                            <div class="form-group">
+                                <label for="employeesToAssign">Employees</label>
+                                <select id="employeesToAssign" class="form-control" th:field="*{employee}">
+                                    <option th:each="employee : ${employees}"
+                                            th:value="${employee.id}"
+                                            th:utext="${employee.username}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group float-right">
+                                <a href="/dashboard/masterDashboard" class="btn btn-secondary">Anuluj</a>
+                                <button id="mySubmitBtn" class="btn btn-primary" type="submit">Przypisz</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

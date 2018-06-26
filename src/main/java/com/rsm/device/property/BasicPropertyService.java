@@ -22,6 +22,6 @@ public class BasicPropertyService {
     }
 
     public List<BasicPropertyDefinition> getByReportId(Long reportId) {
-        return repository.getByReport_Id(reportId);
+        return repository.getByReport_IdAndNumericalIsTrue(reportId);
     }
 }

@@ -10,7 +10,7 @@ INSERT INTO user_details(id, first_name, last_name, phone, email)
 VALUES(1, 'Adam','Adamowicz','+48111222333','adamowicz@email.com');
 
 INSERT INTO user_details(id, first_name, last_name, phone, email)
-VALUES(2, 'Adam','Klient','+48123456789','klient1@mail.com');
+VALUES(2, 'Adam','Klient','+48123456789','migawkaapp@gmail.com');
 
 INSERT INTO user_details(id, first_name, last_name, phone, email)
 VALUES(3, 'Master','Master','+48341555999','master@email.com');

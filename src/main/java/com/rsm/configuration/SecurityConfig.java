@@ -29,6 +29,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http
                 .authorizeRequests()
+                .antMatchers("/dashboard/customerDashboard/**").hasRole("CUSTOMER")
+                .antMatchers("/dashboard/employeeDashboard/**").hasAnyRole("EMPLOYEE","ADMIN")
+                .antMatchers("/dashboard/masterDashboard/**").hasRole("MASTER")
+                .antMatchers("/master/**").hasRole("MASTER")
+                .antMatchers("/reports/**").hasRole("CUSTOMER")
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/images/**").permitAll()
@@ -44,7 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
-                .logoutSuccessUrl("/");
+                .logoutSuccessUrl("/")
+                .and()
+                .exceptionHandling().accessDeniedPage("/errors/403");
     }
 
     @Bean

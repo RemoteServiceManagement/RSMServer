@@ -33,10 +33,15 @@
             <option th:each="devicei : ${devices}" th:value="${devicei.id}" th:text="${devicei.toString()}"></option>
         </select>
     </div>
+    <label for="approvalCheckbox">Zgoda na przetwarzanie danych urządzenia *</label>
+    <input id="approvalCheckbox" type="checkbox" name="active" onclick="changeSubmitButtonState();"/>
     <div class="form-group float-right">
         <button class="btn btn-secondary"
                 data-dismiss="modal">Anuluj</button>
         <button id="mySubmitBtn" class="btn btn-primary" type="submit">Zgłoś usterkę</button>
+        <button class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+        <button id="mySubmitBtn" class="btn btn-primary" type="submit"
+                onclick="alert('Usterka została zgłoszona');" disabled>Zgłoś usterkę</button>
     </div>
 </form>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
