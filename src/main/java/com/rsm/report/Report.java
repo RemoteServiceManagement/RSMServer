@@ -10,6 +10,7 @@ import com.rsm.employee.Employee;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,6 +24,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +54,11 @@ public class Report extends BaseEntity {
     @Column(name="REPORT_STATUS")
     @Enumerated(EnumType.STRING)
     private ReportStatus reportStatus;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date deviceDataFrom;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date deviceDataTo;
 
     @ManyToOne
     @JoinColumn(name="EMPLOYEE_ID")
