@@ -10,6 +10,7 @@ import com.rsm.report.ReportCopy;
 import com.rsm.report.ReportCopyService;
 import com.rsm.report.ReportDoesNotExistException;
 import com.rsm.report.ReportService;
+import com.rsm.report.ReportStatus;
 import com.rsm.role.RoleService;
 import com.rsm.user.User;
 import com.rsm.user.service.UserService;
@@ -77,7 +78,7 @@ public class DashboardController {
         String username = principal.getName();
         Optional<Employee> optionalEmployee = employeeService.findByUsername(username);
         if (optionalEmployee.isPresent()) {
-            List<Report> reports = optionalEmployee.get().getReports();
+            List<Report> reports = ofNullable(optionalEmployee.get().getReports()).map(this::filterNotFinished).orElse(new ArrayList<>());
             int clientCounter = customerService.findAll().size();
             int employeeCounter = employeeService.findAll().size();
             model.addAttribute("clientCounter", clientCounter);
@@ -86,6 +87,10 @@ public class DashboardController {
             model.addAttribute("reportCounter", reports.size());
         }
         return "employeeDashboard";
+    }
+
+    private List<Report> filterNotFinished(List<Report> reports) {
+        return reports.stream().filter(report -> !report.getReportStatus().equals(ReportStatus.FINISHED)).collect(Collectors.toList());
     }
 
     @GetMapping("/customerDashboard")
