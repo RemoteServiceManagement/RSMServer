@@ -8,6 +8,4 @@ public interface ReportRepository extends CrudRepository<Report, Long> {
     List<Report> findAllByOrderByReportDateDesc();
 
     List<Report> findByDevice_IdOrderByReportDateDesc(Long deviceId);
-
-    List<Report> findByQuery();
 }

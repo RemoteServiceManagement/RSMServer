@@ -102,6 +102,6 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<Report> findByQuery(SearchReportParam searchReportParam) {
-        return reportRepository.findByQuery();
+        return new ArrayList<>();
     }
 }
