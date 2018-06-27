@@ -103,6 +103,7 @@
                             <p th:text="${'Opis urządzenia:' + report.device.description}">
                             <p th:text="${'Numer seryjny urządzenia :' + report.device.serialNumber}">
                             <p th:text="${'Wewnętrzny numer identyfikacyjny urządzenia :' + report.device.externalId}">
+                            <p><img width="300" height="300" th:if="${report.reportPhoto}" th:src="@{${'data:image/png;base64,' + report.getImageEncoded()}}" /></p>
                         </div>
                         <div class="form-group float-right">
                             <a href="/dashboard" class="btn btn-secondary">Anuluj</a>
