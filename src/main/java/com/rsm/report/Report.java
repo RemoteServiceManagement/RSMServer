@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.util.Base64Utils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -94,5 +95,8 @@ public class Report extends BaseEntity {
 
     public List<String> getChosenPropertyCode() {
         return getChosenProperty().stream().map(BasicPropertyDefinition::getCode).collect(Collectors.toList());
+    }
+    public String getImageEncoded(){
+        return Base64Utils.encodeToString(this.reportPhoto);
     }
 }
