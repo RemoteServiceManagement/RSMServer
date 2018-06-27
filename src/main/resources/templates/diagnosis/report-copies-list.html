@@ -41,7 +41,7 @@
 <div class="container diagnosis">
     <div class="row">
         <div class="col-sm-3">
-            <div th:replace="diagnosis/sidebar::sidebar(reportId=${report.id})"></div>
+            <div th:replace="diagnosis/sidebar::sidebar(reportId=${report.id}, deviceId=${deviceId})"></div>
         </div>
         <div class="col-sm">
             <div class="card">

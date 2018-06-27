@@ -14,4 +14,6 @@ public interface ReportService {
     void attachReportToCustomer(Report report, String username);
     void attachReportToRandomEmployee(Report report);
     List<Report> findUnassigned();
+
+    List<Report> findByDeviceId(Long deviceId);
 }

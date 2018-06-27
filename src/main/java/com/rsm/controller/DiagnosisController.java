@@ -2,9 +2,15 @@ package com.rsm.controller;
 
 import com.rsm.configuration.EmailSender;
 import com.rsm.device.DeviceLogDataService;
+import com.rsm.device.DeviceService;
 import com.rsm.device.log.DeviceLogTableService;
 import com.rsm.device.log.LogDeviceInfo;
-import com.rsm.report.*;
+import com.rsm.report.Report;
+import com.rsm.report.ReportCopy;
+import com.rsm.report.ReportCopyService;
+import com.rsm.report.ReportDoesNotExistException;
+import com.rsm.report.ReportService;
+import com.rsm.report.ReportStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -32,13 +37,16 @@ public class DiagnosisController {
     private final ReportCopyService reportCopyService;
     private final DeviceLogDataService deviceLogDataService;
     private final DeviceLogTableService logTableService;
+    private final DeviceService deviceService;
     @Autowired
     private EmailSender emailSender;
 
 
     @GetMapping("{reportId}/details")
     public String getReportDetails(@PathVariable Long reportId, Model model) {
-        model.addAttribute("report", getReport(reportId));
+        Report report = getReport(reportId);
+        model.addAttribute("report", report);
+        model.addAttribute("deviceId", report.getDevice().getId());
         return "diagnosis/diagnosis-details";
     }
 
@@ -53,8 +61,10 @@ public class DiagnosisController {
 
     @GetMapping("{reportId}/device/data/{pageNumber}")
     public String showPage(@PathVariable Integer pageNumber, @PathVariable Long reportId, ModelMap model) {
-        model.addAttribute("report", getReport(reportId));
+        Report report = getReport(reportId);
+        model.addAttribute("report", report);
         model.addAttribute("basicLogDevice", deviceLogDataService.getLogDeviceInfo(reportId));
+        model.addAttribute("deviceId", report.getDevice().getId());
         model.addAttribute("deviceLog", logTableService.getDeviceLog(reportId, PAGE_SIZE, pageNumber - 1));
         return "diagnosis/diagnosis-data";
     }
@@ -73,6 +83,7 @@ public class DiagnosisController {
             Report report = reportOptional.get();
             model.addAttribute("report", report);
             model.addAttribute("reportId", reportId);
+            model.addAttribute("deviceId", report.getDevice().getId());
         }
         return "reportDetails";
     }
@@ -99,6 +110,7 @@ public class DiagnosisController {
         Report report = getReport(reportId);
         report.setDiagnosis("");
         model.addAttribute("report", report);
+        model.addAttribute("deviceId", report.getDevice().getId());
         model.addAttribute("customer", report.getCustomer());
         return "diagnosis/customer-details";
     }
@@ -119,6 +131,7 @@ public class DiagnosisController {
         Report report = getReport(reportId);
         model.addAttribute("report", report);
         model.addAttribute("reportCopies", report.getReportCopies());
+        model.addAttribute("deviceId", report.getDevice().getId());
         return "diagnosis/report-copies-list";
     }
 
@@ -128,6 +141,7 @@ public class DiagnosisController {
         Optional<ReportCopy> optionalReportCopy = reportCopyService.findById(reportCopyId);
         if(optionalReportCopy.isPresent()) {
             model.addAttribute("reportCopy", optionalReportCopy.get());
+            model.addAttribute("deviceId", report.getDevice().getId());
         }
         return "diagnosis/report-copy";
     }

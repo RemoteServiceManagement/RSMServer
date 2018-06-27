@@ -27,7 +27,7 @@
 <div class="container diagnosis">
     <div class="row">
         <div class="col-sm-3">
-            <div th:replace="diagnosis/sidebar::sidebar(reportId=${reportId})"></div>
+            <div th:replace="diagnosis/sidebar::sidebar(reportId=${reportId}, deviceId=${deviceId})"></div>
         </div>
         <div class="col-sm">
             <div th:each="chartPropertyData : ${chartPropertiesData}">

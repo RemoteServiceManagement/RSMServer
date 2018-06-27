@@ -4,6 +4,7 @@ import com.rsm.common.BaseEntity;
 import com.rsm.customer.Customer;
 import com.rsm.device.log.remote.connection.RemoteServiceCredential;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
@@ -19,6 +20,7 @@ import javax.persistence.Table;
 @Table(name="DEVICE")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Device extends BaseEntity {
     @Column(name="BRAND")
     private String brand;

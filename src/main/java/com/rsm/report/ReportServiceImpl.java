@@ -28,7 +28,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<Report> findAll() {
-        return reportRepository.findAll();
+        return reportRepository.findAllByOrderByReportDateDesc();
     }
 
     @Override
@@ -93,5 +93,10 @@ public class ReportServiceImpl implements ReportService {
                 unassigned.add(report);
         }
         return unassigned;
+    }
+
+    @Override
+    public List<Report> findByDeviceId(Long deviceId) {
+        return reportRepository.findByDevice_IdOrderByReportDateDesc(deviceId);
     }
 }

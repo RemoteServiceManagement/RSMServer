@@ -15,7 +15,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
             integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
             crossorigin="anonymous"></script>
-    <script src="/webjars/momentjs/2.20.1/moment.js" rel="stylesheet"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
             integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
             crossorigin="anonymous"></script>
@@ -27,30 +26,11 @@
 <div class="container diagnosis">
     <div class="row">
         <div class="col-sm-3">
-            <div th:replace="diagnosis/sidebar::sidebar(reportId=${report.id}, deviceId=${deviceId})"></div>
+            <div th:replace="diagnosis/sidebar::sidebar(reportId=${reportId}, deviceId=${device.id})"></div>
         </div>
         <div class="col-sm">
-            <div th:replace="diagnosis/log-device-info::device-info(basicLogDevice=${basicLogDevice},
-             updateUrl=${'/diagnosis/' + report.id + '/device/data/update'}, report=${report})"></div>
-
-
-            <table class="table table-hover" th:object="${deviceLog}">
-                <thead>
-                <tr>
-                    <th th:each="header : ${deviceLog.header}"
-                        th:text="${header.name + (header.unit != null ? ' [' + header.unit + ']' : '')}"
-                        scope="col"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="content : ${deviceLog.content}">
-                    <td th:each="header : ${deviceLog.header}" th:text="${content.get(header.code)}"></td>
-                </tr>
-                </tbody>
-            </table>
-            <div th:replace="diagnosis/pagination::pagination(page=${deviceLog})"></div>
-
-
+            <div th:replace="report/browse-report::browse-report(reports=${reports},
+        title=${'Raporty dla urządzenia ' + device.brand + ' ' + device.model + '(numer seryjny: ' + device.serialNumber + ')'})"></div>
         </div>
     </div>
 </div>
