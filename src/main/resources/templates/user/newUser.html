@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible"
+          content="ie=edge"/>
+    <title>Serwisowanie Online</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+          integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+            integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor1');
+
+        function changeModalContent() {
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("addReportBody").innerHTML = this.response;
+
+                }
+            };
+            xhttp.open("GET", "http://localhost:8080/reports/reportForm", true);
+            xhttp.send();
+        }
+    </script>
+</head>
+<div th:replace="fragments/header::header">
+</div>
+<body>
+<header class="main-header py-2 bg-primary text-white mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1><i class="fa fa-gear"></i> Panel Dyspozytora</h1>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section id="reports">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Dodaj uzytkownika</h4>
+                    </div>
+                    <form th:action="@{/newUser}" method="post" th:object="${newUser}">
+
+                        <th:block th:if="${#fields.hasErrors('*')}">
+                            <div class="alert alert-danger" role="alert"
+                                 th:each="err : ${#fields.errors('*')}" th:text="${err}">
+                                This is a danger alert—check it out!
+                            </div>
+                        </th:block>
+
+                        <div class="form-group">
+                            <label for="devices">Urządzenie</label>
+                            <select id="devices" th:field="${newUser.roleId}">
+                                <option th:each="rolei : ${roles}" th:value="${rolei.id}"
+                                        th:text="${rolei.roleName}"></option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="login">Login</label>
+                            <input required id="login" type="text" class="form-control" th:field="*{login}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Hasło</label>
+                            <input required id="password" type="password" class="form-control" th:field="*{password}">
+                        </div>
+                        <div class="form-group">
+                            <label for="passwordRepeat">Powtórz hasło</label>
+                            <input required id="passwordRepeat" type="password" class="form-control"
+                                   th:field="*{passwordRepeat}">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input required id="email" type="text" class="form-control" th:field="*{email}">
+                        </div>
+                        <div class="form-group">
+                            <label for="firstName">Imię</label>
+                            <input required id="firstName" type="text" class="form-control" th:field="*{firstName}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastName">Nazwisko</label>
+                            <input required id="lastName" type="text" class="form-control" th:field="*{lastName}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Numer telefonu</label>
+                            <input id="phone" type="text" class="form-control" th:field="*{phone}">
+                        </div>
+
+                        <button id="mySubmitBtn" class="btn btn-primary" type="submit">Dodaj</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-primary text-white mb-5">
+                    <div class="card-body">
+                        <h3>Wszystkie zgłoszenia</h3>
+                        <h1 class="display-4">
+                            <i class="fa fa-pencil"></i> <span th:text="${reportCounter}"></span>
+                        </h1>
+                        <a href="/dashboard/masterDashboard/allReports" class="btn btn-outline-light btn-sm">Zobacz</a>
+                    </div>
+                </div>
+                <div class="card text-center bg-success text-white mb-5">
+                    <div class="card-body">
+                        <h3>Klienci</h3>
+                        <h1 class="display-4">
+                            <i class="fa fa-folder-open-o"></i> <span th:text="${clientCounter}"></span>
+                        </h1>
+                        <a href="/allClients" class="btn btn-outline-light btn-sm">Zobacz</a>
+                    </div>
+                </div>
+                <div class="card text-center bg-warning text-white mb-5">
+                    <div class="card-body">
+                        <h3>Serwisanci</h3>
+                        <h1 class="display-4">
+                            <i class="fa fa-users"></i> <span th:text="${employeeCounter}"></span>
+                        </h1>
+                        <a href="/allEmployees" class="btn btn-outline-light btn-sm">Zobacz</a>
+                    </div>
+                </div>
+                <div class="card text-center bg-warning text-white mb-5">
+                    <div class="card-body">
+                        <h3>Dodaj użytkownika</h3>
+                        <h1 class="display-4">
+                            <i class="fa fa-plus"></i>
+                        </h1>
+                        <a th:href="@{/newUser}" class="btn btn-outline-light btn-sm">Wejdź</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+<div th:replace="fragments/footer::footer">
+</div>
+</html>

@@ -41,7 +41,7 @@ public abstract class User extends BaseEntity{
     @Column(name="LOCKED")
     private boolean locked;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private UserDetails details;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
