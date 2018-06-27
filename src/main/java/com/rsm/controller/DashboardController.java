@@ -162,7 +162,7 @@ public class DashboardController {
 
     @PostMapping("/masterDashboard/allReports")
     public String masterDashboardAllReports(@ModelAttribute SearchReportParam searchReportParam, Model model) {
-        List<Report> reports = reportService.findByQuery(searchReportParam);
+        Iterable<Report> reports = reportService.findByQuery(searchReportParam);
         int unnasignedReportsSize = reportService.findUnassignedAndNotFinished().size();
         int clientCounter = customerService.findAll().size();
         int employeeCounter = employeeService.findAll().size();

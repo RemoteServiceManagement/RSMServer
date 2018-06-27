@@ -17,5 +17,5 @@ public interface ReportService {
 
     List<Report> findByDeviceId(Long deviceId);
 
-    List<Report> findByQuery(SearchReportParam searchReportParam);
+    Iterable<Report> findByQuery(SearchReportParam searchReportParam);
 }

@@ -1,5 +1,6 @@
 package com.rsm.report;
 
+import com.querydsl.core.BooleanBuilder;
 import com.rsm.customer.Customer;
 import com.rsm.customer.CustomerDoesNotExistException;
 import com.rsm.customer.CustomerService;
@@ -7,6 +8,7 @@ import com.rsm.employee.Employee;
 import com.rsm.employee.EmployeeService;
 import com.rsm.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -101,7 +103,46 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<Report> findByQuery(SearchReportParam searchReportParam) {
-        return new ArrayList<>();
+    public Iterable<Report> findByQuery(SearchReportParam searchReportParam) {
+        BooleanBuilder employeePredicate = new BooleanBuilder();
+        String[] employeeTokens = StringUtils.split(searchReportParam.getEmployeeIdentify(), ' ');
+        if (employeeTokens.length != 2) {
+            for (String token : employeeTokens) {
+                employeePredicate.or(QReport.report.employee.username.containsIgnoreCase(token));
+                employeePredicate.or(QReport.report.employee.details.firstName.containsIgnoreCase(token));
+                employeePredicate.or(QReport.report.employee.details.lastName.containsIgnoreCase(token));
+            }
+        } else {
+            for (String token : employeeTokens) {
+                employeePredicate.or(QReport.report.employee.username.containsIgnoreCase(token));
+            }
+            employeePredicate.or(QReport.report.employee.details.firstName.containsIgnoreCase(employeeTokens[0]));
+            employeePredicate.or(QReport.report.employee.details.lastName.containsIgnoreCase(employeeTokens[1]));
+        }
+
+        BooleanBuilder customerPredicate = new BooleanBuilder();
+        String[] customerTokens = StringUtils.split(searchReportParam.getCustomerIdentify(), ' ');
+        if (customerTokens.length != 2) {
+            for (String token : customerTokens) {
+                customerPredicate.or(QReport.report.customer.username.containsIgnoreCase(token));
+                customerPredicate.or(QReport.report.customer.details.firstName.containsIgnoreCase(token));
+                customerPredicate.or(QReport.report.customer.details.lastName.containsIgnoreCase(token));
+            }
+        } else {
+            for (String token : customerTokens) {
+                customerPredicate.or(QReport.report.customer.username.containsIgnoreCase(token));
+            }
+            customerPredicate.or(QReport.report.customer.details.firstName.containsIgnoreCase(customerTokens[0]));
+            customerPredicate.or(QReport.report.customer.details.lastName.containsIgnoreCase(customerTokens[1]));
+        }
+
+        BooleanBuilder result = new BooleanBuilder();
+        result.and(customerPredicate).and(employeePredicate);
+
+        if (searchReportParam.getReportStatus() != null) {
+            result.and(QReport.report.reportStatus.eq(searchReportParam.getReportStatus()));
+        }
+
+        return reportRepository.findAll(result);
     }
 }
