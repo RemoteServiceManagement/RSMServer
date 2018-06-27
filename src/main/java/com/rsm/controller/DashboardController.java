@@ -11,6 +11,7 @@ import com.rsm.report.ReportCopyService;
 import com.rsm.report.ReportDoesNotExistException;
 import com.rsm.report.ReportService;
 import com.rsm.report.ReportStatus;
+import com.rsm.report.SearchReportParam;
 import com.rsm.role.RoleService;
 import com.rsm.user.User;
 import com.rsm.user.service.UserService;
@@ -33,6 +34,7 @@ import java.nio.file.Paths;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -149,6 +151,27 @@ public class DashboardController {
         model.addAttribute("employeeCounter", employeeCounter);
         model.addAttribute("reports", reports);
         model.addAttribute("reportCounter", unnasignedReportsSize);
+        model.addAttribute("queryParams", new SearchReportParam());
+        model.addAttribute("statuses", getStatuses());
+        return "allReportsMaster";
+    }
+
+    private List<ReportStatus> getStatuses() {
+        return Arrays.stream(ReportStatus.values()).collect(Collectors.toList());
+    }
+
+    @PostMapping("/masterDashboard/allReports")
+    public String masterDashboardAllReports(@ModelAttribute SearchReportParam searchReportParam, Model model) {
+        List<Report> reports = reportService.findByQuery(searchReportParam);
+        int unnasignedReportsSize = reportService.findUnassignedAndNotFinished().size();
+        int clientCounter = customerService.findAll().size();
+        int employeeCounter = employeeService.findAll().size();
+        model.addAttribute("clientCounter", clientCounter);
+        model.addAttribute("employeeCounter", employeeCounter);
+        model.addAttribute("reports", reports);
+        model.addAttribute("reportCounter", unnasignedReportsSize);
+        model.addAttribute("queryParams", searchReportParam);
+        model.addAttribute("statuses", getStatuses());
         return "allReportsMaster";
     }
 

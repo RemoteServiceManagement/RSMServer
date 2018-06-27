@@ -16,4 +16,6 @@ public interface ReportService {
     List<Report> findUnassignedAndNotFinished();
 
     List<Report> findByDeviceId(Long deviceId);
+
+    List<Report> findByQuery(SearchReportParam searchReportParam);
 }

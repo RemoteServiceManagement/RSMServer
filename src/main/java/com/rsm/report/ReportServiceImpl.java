@@ -99,4 +99,9 @@ public class ReportServiceImpl implements ReportService {
     public List<Report> findByDeviceId(Long deviceId) {
         return reportRepository.findByDevice_IdOrderByReportDateDesc(deviceId);
     }
+
+    @Override
+    public List<Report> findByQuery(SearchReportParam searchReportParam) {
+        return reportRepository.findByQuery();
+    }
 }
