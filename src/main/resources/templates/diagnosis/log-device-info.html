@@ -54,8 +54,8 @@
     </form>
     <script type="text/javascript" th:inline="javascript">
         /*<![CDATA[*/
-        var dateFrom = /*[[${report.deviceDataFrom.getTime()}]]*/;
-        var dateTo = /*[[${report.deviceDataTo.getTime()}]]*/;
+        var dateFrom = /*[[${report.deviceDataFrom == null ? null : report.deviceDataFrom.getTime()}]]*/;
+        var dateTo = /*[[${report.deviceDataTo == null ? null : report.deviceDataTo.getTime()}]]*/;
 
         $('#date-start').attr('min', moment(dateFrom).format('YYYY-MM-DD'));
         $('#date-start').attr('max', moment(dateTo).format('YYYY-MM-DD'));
