@@ -30,9 +30,14 @@
             <div th:replace="diagnosis/sidebar::sidebar(reportId=${reportId}, deviceId=${deviceId})"></div>
         </div>
         <div class="col-sm">
-            <div th:each="chartPropertyData : ${chartPropertiesData}">
-                <div th:replace="chart/chart::chart(chartData=${chartPropertyData})"></div>
-            </div>
+            <th:block th:if="${chartPropertiesData != null and !chartPropertiesData.isEmpty()}">
+                <div th:each="chartPropertyData : ${chartPropertiesData}">
+                    <div th:replace="chart/chart::chart(chartData=${chartPropertyData})"></div>
+                </div>
+            </th:block>
+            <th:block th:if="${chartPropertiesData == null or chartPropertiesData.isEmpty()}">
+                    <h1>Brak pobranych danych. Wybierz dane w zakładce "Dane".</h1>
+            </th:block>
         </div>
     </div>
 </div>
