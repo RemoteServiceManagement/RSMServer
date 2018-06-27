@@ -85,11 +85,11 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<Report> findUnassigned() {
+    public List<Report> findUnassignedAndNotFinished() {
         List<Report> reports = this.findAll();
         List<Report> unassigned = new ArrayList<>();
         for (Report report : reports) {
-            if (report.getEmployee() == null)
+            if (report.getEmployee() == null && !report.getReportStatus().equals(ReportStatus.FINISHED))
                 unassigned.add(report);
         }
         return unassigned;

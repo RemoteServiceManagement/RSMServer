@@ -1,14 +1,21 @@
 package com.rsm.configuration;
 
-import com.itextpdf.text.*;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.rsm.report.Report;
+import com.rsm.user.User;
 import com.rsm.user.UserDetails;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rsm.user.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.activation.DataHandler;
@@ -23,11 +30,14 @@ import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-@Component
-public class EmailSender {
+import static java.util.Optional.ofNullable;
 
-    @Autowired
-    private JavaMailSender javaMailSender;
+@Component
+@RequiredArgsConstructor
+public class EmailSender {
+    private final JavaMailSender javaMailSender;
+    private final UserService userService;
+    private final ApplicationContext applicationContext;
 
     public void sendEmailReportAssigned(Report report) {
         MimeMessage mail = javaMailSender.createMimeMessage();
@@ -49,7 +59,12 @@ public class EmailSender {
 
     public void sendEmailReportFinished(Report report) {
         MimeMessage mail = javaMailSender.createMimeMessage();
-        UserDetails employee = report.getEmployee().getDetails();
+        UserDetails employee = ofNullable(report.getEmployee()).map(User::getDetails).orElseGet(this::getCurrentUser);
+        applicationContext.getBean(EmailSender.class).prepareAndSend(report, mail, employee);
+    }
+
+    @Async
+    protected void prepareAndSend(Report report, MimeMessage mail, UserDetails employee) {
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mail, true);
             helper.setTo(report.getCustomer().getDetails().getEmail());
@@ -70,10 +85,10 @@ public class EmailSender {
                 table.addCell(new PdfPCell(new Paragraph("Diagnoza")));
                 table.addCell(new PdfPCell(new Paragraph(report.getDiagnosis())));
                 table.addCell(new PdfPCell(new Paragraph("Pracownik")));
-                table.addCell(new PdfPCell(new Paragraph(report.getEmployee().getDetails().getFirstName() + " " +
-                        report.getEmployee().getDetails().getLastName())));
+                table.addCell(new PdfPCell(new Paragraph(employee.getFirstName() + " " +
+                        employee.getLastName())));
                 table.addCell(new PdfPCell(new Paragraph("Kontakt telefoniczny")));
-                table.addCell(new PdfPCell(new Paragraph(report.getEmployee().getDetails().getPhone())));
+                table.addCell(new PdfPCell(new Paragraph(employee.getPhone())));
                 table.addCell(new PdfPCell(new Paragraph("Wycena")));
                 table.addCell(new PdfPCell(new Paragraph(report.getPricing() + " zlotych")));
                 table.addCell(new PdfPCell(new Paragraph("Termin zaplaty")));
@@ -106,6 +121,10 @@ public class EmailSender {
             e.printStackTrace();
         }
         javaMailSender.send(mail);
+    }
+
+    private UserDetails getCurrentUser() {
+        return userService.getCurrentUser().getDetails();
     }
 
     public void sendEmailUpdateReport(Report report, String description) {

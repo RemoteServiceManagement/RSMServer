@@ -123,7 +123,7 @@ public class DashboardController {
 
     @GetMapping("/masterDashboard")
     public String masterDashboard(Model model) {
-        List<Report> reports = reportService.findUnassigned();
+        List<Report> reports = reportService.findUnassignedAndNotFinished();
         int allReportsSize = reportService.findAll().size();
         int clientCounter = customerService.findAll().size();
         int employeeCounter = employeeService.findAll().size();
@@ -137,7 +137,7 @@ public class DashboardController {
     @GetMapping("/masterDashboard/allReports")
     public String masterDashboardAllReports(Model model) {
         List<Report> reports = reportService.findAll();
-        int unnasignedReportsSize = reportService.findUnassigned().size();
+        int unnasignedReportsSize = reportService.findUnassignedAndNotFinished().size();
         int clientCounter = customerService.findAll().size();
         int employeeCounter = employeeService.findAll().size();
         model.addAttribute("clientCounter", clientCounter);

@@ -13,7 +13,7 @@ public interface ReportService {
     void deleteById(Long id);
     void attachReportToCustomer(Report report, String username);
     void attachReportToRandomEmployee(Report report);
-    List<Report> findUnassigned();
+    List<Report> findUnassignedAndNotFinished();
 
     List<Report> findByDeviceId(Long deviceId);
 }
