@@ -67,7 +67,7 @@
                         </th:block>
 
                         <div class="form-group">
-                            <label for="devices">Urządzenie</label>
+                            <label for="devices">Rola</label>
                             <select id="devices" th:field="${newUser.roleId}">
                                 <option th:each="rolei : ${roles}" th:value="${rolei.id}"
                                         th:text="${rolei.roleName}"></option>
